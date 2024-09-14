@@ -1,12 +1,13 @@
 package com.Profpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "videos")
+@Table(name = "video")
 
 public class Video {
     @Id
@@ -19,6 +20,7 @@ public class Video {
     @Column(unique = true, nullable = false)
     private String url;
 
+    @Column(name = "duration")
     private float duration;
 
     @Column(name = "cover_path")
@@ -36,4 +38,12 @@ public class Video {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_blog_category"))
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_video_usuario"))
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "playlist_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_video_playlist"))
+    private Playlist playlist;
 }

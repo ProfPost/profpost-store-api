@@ -2,7 +2,6 @@ package com.Profpost.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -16,9 +15,8 @@ public class Coment {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @ManyToOne
+    @JoinColumn(name = "video_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_coment_video"))
+    private Video video;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

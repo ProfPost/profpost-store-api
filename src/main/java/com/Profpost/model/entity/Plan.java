@@ -2,27 +2,25 @@ package com.Profpost.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "plans")
+@Table(name = "plan")
 public class Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name_plan")
     private String name;
 
+    @Column(name = "price", nullable = false)
     private float price;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    private String description;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "finalized_at")
-    private LocalDateTime finalizedAt;
+    @ManyToOne
+    @JoinColumn(name = "suscription_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_plan_suscription"))
+    private Suscription suscription;
 }

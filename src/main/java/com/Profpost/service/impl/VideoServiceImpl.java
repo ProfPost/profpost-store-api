@@ -56,12 +56,4 @@ public class VideoServiceImpl implements VideoService {
         videoRepository.delete(video);
     }
 
-    @Transactional
-    @Override
-    public void schedulePublication(Integer id, LocalDateTime createdAt) {
-        Video video = findById(id);
-        video.setUpdatedAt(LocalDateTime.now());
-        videoRepository.save(video);
-    }
-
 }

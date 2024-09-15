@@ -10,5 +10,4 @@ public interface VideoService {
     Video create(Video video);
     Video update(Integer id, Video updateVideo);
     void delete(Integer id);
-    void schedulePublication(Integer id, LocalDateTime createdAt);
 }

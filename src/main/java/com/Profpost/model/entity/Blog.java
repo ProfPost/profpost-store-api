@@ -3,6 +3,8 @@ package com.Profpost.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "blog")
@@ -23,6 +25,12 @@ public class Blog {
 
     @Column(name = "file_path")
     private String filePath;
+
+    @Column(name = "createdAt", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updatedAt", nullable = false)
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_blog_category"))

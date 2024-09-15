@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 public class Video {
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

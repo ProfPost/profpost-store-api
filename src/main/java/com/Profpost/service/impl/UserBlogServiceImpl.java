@@ -1,9 +1,10 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.model.entity.Blog;
-//import com.Profpost.model.entity.Category;
+import com.Profpost.model.entity.Category;
 import com.Profpost.model.entity.User;
 import com.Profpost.repository.BlogRepository;
+import com.Profpost.repository.CategoryRepository;
 import com.Profpost.repository.UserRepository;
 import com.Profpost.service.UserBlogService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.List;
 public class UserBlogServiceImpl implements UserBlogService {
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
-    //private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -28,12 +29,12 @@ public class UserBlogServiceImpl implements UserBlogService {
 
     @Override
     public Blog create(Blog blog) {
-        //Category category = categoryRepository.findById(blog.getCategory().getId())
-                //.orElseThrow(() -> new RuntimeException("Category not found" + blog.getCategory().getId()));
+        Category category = categoryRepository.findById(blog.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("Category not found" + blog.getCategory().getId()));
         User user = userRepository.findById(blog.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found" + blog.getUser().getId()));
 
-        //blog.getCategory(category);
+        blog.setCategory(category);
         blog.setUser(user);
         blog.setCreatedAt(LocalDateTime.now());
 
@@ -52,8 +53,8 @@ public class UserBlogServiceImpl implements UserBlogService {
     public Blog update(Integer id, Blog updateBlog) {
         Blog blogFromDb = findById(id);
 
-        //Category category = categoryRepository.findById(updateBlog.getCategory().getId())
-                //.orElseThrow(() -> new RuntimeException("Category not found" + updateBlog.getCategory().getId()));
+        Category category = categoryRepository.findById(updateBlog.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("Category not found" + updateBlog.getCategory().getId()));
         User user = userRepository.findById(updateBlog.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found" + updateBlog.getUser().getId()));
 
@@ -61,7 +62,7 @@ public class UserBlogServiceImpl implements UserBlogService {
         blogFromDb.setContent(updateBlog.getContent());
         blogFromDb.setCoverPath(updateBlog.getCoverPath());
         blogFromDb.setFilePath(updateBlog.getFilePath());
-        //blogFromDb.setCategory(category);
+        blogFromDb.setCategory(category);
         blogFromDb.setUser(user);
         blogFromDb.setUpdatedAt(LocalDateTime.now());
 

@@ -29,7 +29,7 @@ public class Blog {
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", nullable = false)
+    @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
     @ManyToOne

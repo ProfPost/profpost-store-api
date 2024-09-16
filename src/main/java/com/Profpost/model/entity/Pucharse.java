@@ -32,7 +32,7 @@ public class Pucharse {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "suscription_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_pucharse_suscription"))
-    private Suscription suscription;
+    private Subscription suscription;
 
     @ManyToOne
     @JoinColumn(name = "donation_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_pucharse_donation"))

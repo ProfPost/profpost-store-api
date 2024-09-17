@@ -38,6 +38,12 @@ public class UserBlogServiceImpl implements UserBlogService {
         blog.setUser(user);
         blog.setCreatedAt(LocalDateTime.now());
 
+        if (blog.getSchedulePublishAt() != null && blog.getSchedulePublishAt().isAfter(LocalDateTime.now())) {
+            blog.setPublished(false);
+        } else {
+            blog.setPublished(true);
+        }
+
         return blogRepository.save(blog);
     }
 

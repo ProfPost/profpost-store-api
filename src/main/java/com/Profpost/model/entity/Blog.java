@@ -32,6 +32,12 @@ public class Blog {
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
+    @Column(name = "schedulePublishAt")
+    private LocalDateTime schedulePublishAt;
+
+    @Column(name = "isPublished", nullable = false)
+    private boolean isPublished;
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_blog_category"))
     private Category category;

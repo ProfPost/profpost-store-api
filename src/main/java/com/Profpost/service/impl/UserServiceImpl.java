@@ -23,13 +23,6 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User create(User user) {
-        user.setCreatedAt(LocalDateTime.now());
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    @Override
     public User findById(Integer id) {
         return userRepository.findById(id).
                 orElseThrow(()-> new RuntimeException("User not found"));
@@ -52,5 +45,16 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         User user = findById(id);
         userRepository.delete(user);
+    }
+
+    @Transactional
+    @Override
+    public User registerUser(User user) {
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        user.setCreatedAt(LocalDateTime.now());
+
+        return userRepository.save(user);
     }
 }

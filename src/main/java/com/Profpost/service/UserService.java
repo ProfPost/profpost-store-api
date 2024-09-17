@@ -7,6 +7,7 @@ public interface UserService {
     List<User> findAll();
     User registerUser(User user);
     User findById(Integer id);
+    User findByEmail(String email);
     User update(Integer id, User updatedUser);
     void delete(Integer id);
 }

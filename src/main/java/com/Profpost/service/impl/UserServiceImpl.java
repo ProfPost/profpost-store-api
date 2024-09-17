@@ -24,8 +24,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User findById(Integer id) {
-        return userRepository.findById(id).
-                orElseThrow(()-> new RuntimeException("User not found"));
+        return userRepository.findById(id)
+                        .orElseThrow(()-> new RuntimeException("User not found"));
+    }
+
+    @Transactional
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional

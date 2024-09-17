@@ -16,6 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final UserService userService;
 
+    @PostMapping
+    public ResponseEntity<String> login(@RequestBody User loginRequest) {
+        User user = userService.findByEmail(loginRequest.getEmail());
+
+        if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+            return new ResponseEntity<>("Login successful", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Login failed", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         User newUser = userService.registerUser(user);

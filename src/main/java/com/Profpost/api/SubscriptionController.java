@@ -4,13 +4,12 @@ import com.Profpost.dto.SubscriptionDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
 import com.Profpost.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/subscription")
+@RequestMapping("/subscription")
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
@@ -25,5 +24,4 @@ public class SubscriptionController {
         SubscriptionResponseDTO response = subscriptionService.unsubscribe(subscriptionId);
         return ResponseEntity.ok(response);
     }
-
 }

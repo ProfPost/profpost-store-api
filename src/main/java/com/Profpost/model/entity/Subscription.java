@@ -6,20 +6,30 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "suscription")
+@Table(name = "subscription")
 
 public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "start_date")
+    private LocalDateTime starDate;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     private SubscriptionState subscriptionState;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
 }

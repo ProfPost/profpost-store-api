@@ -11,19 +11,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<User>> listUser(){
         return ResponseEntity.ok(userService.findAll());
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return userService.create(user);
     }
 
     @GetMapping("/{id}")

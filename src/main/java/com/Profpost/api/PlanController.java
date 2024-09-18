@@ -11,26 +11,27 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("admin/plans")
+@RequestMapping("/plans")
 
 public class PlanController {
     private final PlanService planService;
 
     @GetMapping
     public ResponseEntity<List<Plan>>listPlan(){
-        return ResponseEntity.ok(planService.findAll());
+        List<Plan> blogs = planService.findAll();
+        return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Plan> create(@RequestBody Plan plan){
         Plan createdPlan = planService.create(plan);
-        return new ResponseEntity<Plan>(createdPlan,HttpStatus.CREATED);
+        return new ResponseEntity<>(createdPlan,HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Plan> getById(@PathVariable Integer id){
         Plan plan = planService.findById(id);
-        return new ResponseEntity<Plan>(plan, HttpStatus.OK);
+        return new ResponseEntity<>(plan, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

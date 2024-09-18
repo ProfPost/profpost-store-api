@@ -19,8 +19,4 @@ public class Plan {
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "suscription_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_plan_suscription"))
-    private Suscription suscription;
 }

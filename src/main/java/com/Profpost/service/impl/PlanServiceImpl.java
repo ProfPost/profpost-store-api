@@ -27,7 +27,7 @@ public class PlanServiceImpl implements PlanService {
         return planRepository.save(plan);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Plan findById(Integer id) {
         return planRepository.findById(id)

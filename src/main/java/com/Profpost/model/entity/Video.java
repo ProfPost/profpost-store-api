@@ -1,6 +1,5 @@
 package com.Profpost.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -10,6 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "video")
 
 public class Video {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -34,6 +34,12 @@ public class Video {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "schedulePublishAt")
+    private LocalDateTime schedulePublishAt;
+
+    @Column(name = "isPublished", nullable = false)
+    private boolean isPublished;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_blog_category"))

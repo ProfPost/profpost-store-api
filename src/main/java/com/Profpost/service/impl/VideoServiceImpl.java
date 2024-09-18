@@ -1,15 +1,19 @@
 package com.Profpost.service.impl;
 
+import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.Video;
 import com.Profpost.model.entity.Category;
 import com.Profpost.model.entity.User;
 
+import com.Profpost.model.enums.SubscriptionState;
+import com.Profpost.repository.SubscriptionRepository;
 import com.Profpost.repository.VideoRepository;
 import com.Profpost.repository.CategoryRepository;
 import com.Profpost.repository.UserRepository;
 
 import com.Profpost.service.VideoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,12 @@ public class VideoServiceImpl implements VideoService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -46,6 +56,19 @@ public class VideoServiceImpl implements VideoService {
         }
         else {
             video.setPublished(true);
+        }
+
+        videoRepository.save(video);
+
+        List<Subscription> subscriptions = subscriptionRepository.findByCreator(video.getUser());
+
+        for (Subscription subscription : subscriptions) {
+            if (subscription.getSubscriptionState() == SubscriptionState.SUBSCRIBE){
+                String toEmail = subscription.getUser().getEmail();
+                String subject = "Nuevo video subido por " + video.getUser().getName();
+                String body = "El creador " + video.getUser().getName() + " ha subido nuevo blog: " + video.getTitle();
+                emailService.sendNotification(toEmail, subject, body);
+            }
         }
 
         return videoRepository.save(video);

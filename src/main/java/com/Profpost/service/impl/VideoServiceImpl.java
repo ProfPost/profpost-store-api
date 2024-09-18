@@ -40,6 +40,14 @@ public class VideoServiceImpl implements VideoService {
         video.setCategory(category);
         video.setUser(user);
         video.setCreatedAt(LocalDateTime.now());
+
+        if(video.getSchedulePublishAt() != null && video.getSchedulePublishAt().isAfter(LocalDateTime.now())) {
+            video.setPublished(false);
+        }
+        else {
+            video.setPublished(true);
+        }
+
         return videoRepository.save(video);
     }
 

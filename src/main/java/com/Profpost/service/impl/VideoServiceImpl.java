@@ -66,7 +66,7 @@ public class VideoServiceImpl implements VideoService {
             if (subscription.getSubscriptionState() == SubscriptionState.SUBSCRIBE){
                 String toEmail = subscription.getUser().getEmail();
                 String subject = "Nueva publicación subido por " + video.getUser().getName();
-                String body = "El creador " + video.getUser().getName() + " ha subido nuevo blog: " + video.getTitle();
+                String body = "El creador " + video.getUser().getName() + " ha subido nuevo contenido: " + video.getTitle();
                 emailService.sendNotification(toEmail, subject, body);
             }
         }

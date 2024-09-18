@@ -62,7 +62,7 @@ public class UserBlogServiceImpl implements UserBlogService {
             if (subscription.getSubscriptionState() == SubscriptionState.SUBSCRIBE){
                 String toEmail = subscription.getUser().getEmail();
                 String subject = "Nueva publicación subido por " + blog.getUser().getName();
-                String body = "El creador " + blog.getUser().getName() + " ha subido nuevo blog: " + blog.getTitle();
+                String body = "El creador " + blog.getUser().getName() + " ha subido nuevo contenido: " + blog.getTitle();
                 emailService.sendNotification(toEmail, subject, body);
             }
         }

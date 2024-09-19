@@ -5,6 +5,7 @@ import com.Profpost.model.enums.SubscriptionState;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -36,4 +37,14 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private SubscriptionState subscriptionState;
+    @OneToMany(mappedBy = "user")
+    private Collection<Reaction> reaction;
+
+    public Collection<Reaction> getReaction() {
+        return reaction;
+    }
+
+    public void setReaction(Collection<Reaction> reaction) {
+        this.reaction = reaction;
+    }
 }

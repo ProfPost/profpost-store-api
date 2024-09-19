@@ -50,6 +50,6 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setDonation(donation);
         }
 
-        return purchaseRepository.save(purchase);  // Guardar la compra en la base de datos
+        return purchaseRepository.save(purchase);
     }
 }

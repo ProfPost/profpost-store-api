@@ -1,6 +1,7 @@
 package com.Profpost.api;
 
 import com.Profpost.model.entity.Playlist;
+import com.Profpost.model.entity.Video;
 import com.Profpost.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,8 @@ public class PlaylistController {
     }
 
     @PutMapping("/{id}")
-    public Playlist update(@PathVariable Integer id, @RequestBody Playlist playlist) {
+    public Playlist update(@PathVariable Integer id, @RequestBody Playlist
+            playlist) {
         return playlistService.update(id, playlist);
     }
 
@@ -41,5 +43,25 @@ public class PlaylistController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         playlistService.delete(id);
+    }
+
+
+    @GetMapping("/{playlistId}/videos")
+    public ResponseEntity<List<Video>> getVideosByPlaylist(@PathVariable Integer playlistId) {
+        List<Video> videos = playlistService.getVideosByPlaylistId(playlistId);
+        return ResponseEntity.ok(videos);
+    }
+
+    @PostMapping("/add/video")
+    public ResponseEntity<Video> addVideoToPlaylist(@RequestParam Integer playlistId, @RequestParam Integer videoId) {
+        Video updatedVideo = playlistService.addVideoToPlaylist(playlistId, videoId);
+        return ResponseEntity.ok(updatedVideo);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{playlistId}/videos/{videoId}")
+    public ResponseEntity<Void> removeVideoFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer videoId) {
+        playlistService.removeVideoFromPlaylist(playlistId, videoId);
+        return ResponseEntity.noContent().build();
     }
 }

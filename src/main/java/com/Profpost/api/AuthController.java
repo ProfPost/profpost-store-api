@@ -33,5 +33,4 @@ public class AuthController {
         User newUser = userService.registerUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
-
 }

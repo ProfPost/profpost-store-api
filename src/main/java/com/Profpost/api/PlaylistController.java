@@ -12,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user/playlist")
+@RequestMapping("/playlist")
 
 public class PlaylistController {
     private final PlaylistService playlistService;
@@ -34,8 +34,7 @@ public class PlaylistController {
     }
 
     @PutMapping("/{id}")
-    public Playlist update(@PathVariable Integer id, @RequestBody Playlist
-            playlist) {
+    public Playlist update(@PathVariable Integer id, @RequestBody Playlist playlist) {
         return playlistService.update(id, playlist);
     }
 
@@ -44,7 +43,6 @@ public class PlaylistController {
     public void delete(@PathVariable Integer id) {
         playlistService.delete(id);
     }
-
 
     @GetMapping("/{playlistId}/videos")
     public ResponseEntity<List<Video>> getVideosByPlaylist(@PathVariable Integer playlistId) {

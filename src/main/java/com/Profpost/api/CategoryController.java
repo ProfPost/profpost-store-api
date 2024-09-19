@@ -8,12 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.util.List;
 
-
-
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/category")
+@RequestMapping("/category")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -44,7 +41,5 @@ public class CategoryController {
     public ResponseEntity<Category> deleteCategory(@PathVariable("id") Integer id){
         categoryService.delete(id);
         return new ResponseEntity<Category>(HttpStatus.NO_CONTENT);
-
     }
-
 }

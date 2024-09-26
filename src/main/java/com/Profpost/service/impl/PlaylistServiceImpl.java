@@ -1,9 +1,9 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.model.entity.Playlist;
-import com.Profpost.model.entity.Video;
+import com.Profpost.model.entity.Publication;
 import com.Profpost.repository.PlaylistRepository;
-import com.Profpost.repository.VideoRepository;
+import com.Profpost.repository.PublicationRepository;
 import com.Profpost.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
     private final PlaylistRepository playlistRepository;
-    private final VideoRepository videoRepository;
+    private final PublicationRepository publicationRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -56,32 +56,32 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Transactional
     @Override
-    public List<Video> getVideosByPlaylistId(Integer playlistId) {
+    public List<Publication> getPublicationByPlaylistId(Integer playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Playlist not found"));
-        return playlist.getVideos();
+        return playlist.getPublications();
     }
 
     @Transactional
     @Override
-    public Video addVideoToPlaylist(Integer playlistId, Integer videoId) {
+    public Publication addPublicationToPlaylist(Integer playlistId, Integer publicationId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Playlist not found"));
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new RuntimeException("Video not found"));
-        video.setPlaylist(playlist);
-        video.setUpdatedAt(LocalDateTime.now());
-        return videoRepository.save(video);
+        Publication publication = publicationRepository.findById(publicationId)
+                .orElseThrow(() -> new RuntimeException("Publication not found"));
+        publication.setPlaylist(playlist);
+        publication.setUpdatedAt(LocalDateTime.now());
+        return publicationRepository.save(publication);
     }
 
     @Transactional
     @Override
-    public void removeVideoFromPlaylist(Integer playlistId, Integer videoId) {
+    public void removePublicationFromPlaylist(Integer playlistId, Integer publicationId) {
         playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Playlist not found"));
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new RuntimeException("Video not found"));
-        video.setPlaylist(null);
-        videoRepository.save(video);
+        Publication publication = publicationRepository.findById(publicationId)
+                .orElseThrow(() -> new RuntimeException("Publication not found"));
+        publication.setPlaylist(null);
+        publicationRepository.save(publication);
     }
 }

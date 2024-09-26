@@ -1,7 +1,7 @@
 package com.Profpost.api;
 
 import com.Profpost.model.entity.Playlist;
-import com.Profpost.model.entity.Video;
+import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,22 +44,22 @@ public class PlaylistController {
         playlistService.delete(id);
     }
 
-    @GetMapping("/{playlistId}/videos")
-    public ResponseEntity<List<Video>> getVideosByPlaylist(@PathVariable Integer playlistId) {
-        List<Video> videos = playlistService.getVideosByPlaylistId(playlistId);
-        return ResponseEntity.ok(videos);
+    @GetMapping("/{playlistId}/publications")
+    public ResponseEntity<List<Publication>> getPublicationByPlaylist(@PathVariable Integer playlistId) {
+        List<Publication> publication = playlistService.getPublicationByPlaylistId(playlistId);
+        return ResponseEntity.ok(publication);
     }
 
-    @PostMapping("/add/video")
-    public ResponseEntity<Video> addVideoToPlaylist(@RequestParam Integer playlistId, @RequestParam Integer videoId) {
-        Video updatedVideo = playlistService.addVideoToPlaylist(playlistId, videoId);
-        return ResponseEntity.ok(updatedVideo);
+    @PostMapping("/add/publication")
+    public ResponseEntity<Publication> addPublicationToPlaylist(@RequestParam Integer playlistId, @RequestParam Integer publicationId) {
+        Publication updatedpublication = playlistService.addPublicationToPlaylist(playlistId, publicationId);
+        return ResponseEntity.ok(updatedpublication);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{playlistId}/videos/{videoId}")
-    public ResponseEntity<Void> removeVideoFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer videoId) {
-        playlistService.removeVideoFromPlaylist(playlistId, videoId);
+    @DeleteMapping("/{playlistId}/publications/{publicationsId}")
+    public ResponseEntity<Void> removePublicationFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer publicationId) {
+        playlistService.removePublicationFromPlaylist(playlistId, publicationId);
         return ResponseEntity.noContent().build();
     }
 }

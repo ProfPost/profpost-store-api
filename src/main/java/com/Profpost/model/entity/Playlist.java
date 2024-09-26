@@ -25,5 +25,5 @@ public class Playlist {
 
     @JsonIgnore
     @OneToMany(mappedBy = "playlist")
-    private List<Video> videos;
+    private List<Publication> publications;
 }

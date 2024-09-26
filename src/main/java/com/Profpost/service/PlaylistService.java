@@ -1,7 +1,7 @@
 package com.Profpost.service;
 
 import com.Profpost.model.entity.Playlist;
-import com.Profpost.model.entity.Video;
+import com.Profpost.model.entity.Publication;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ public interface PlaylistService {
 
     void delete(Integer id);
 
-    List<Video> getVideosByPlaylistId(Integer playlistId);
+    List<Publication> getPublicationByPlaylistId(Integer playlistId);
 
-    Video addVideoToPlaylist(Integer playlistId, Integer videoId);
+    Publication addPublicationToPlaylist(Integer playlistId, Integer publicationId);
 
-    void removeVideoFromPlaylist(Integer playlistId, Integer videoId);
+    void removePublicationFromPlaylist(Integer playlistId, Integer publicationId);
 }

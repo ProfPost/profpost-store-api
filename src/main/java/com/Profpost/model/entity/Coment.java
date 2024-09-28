@@ -16,7 +16,7 @@ public class Coment {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "video_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_coment_video"))
-    private Video video;
+    @JoinColumn(name = "publication_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_coment_publication"))
+    private Publication publication;
 
 }

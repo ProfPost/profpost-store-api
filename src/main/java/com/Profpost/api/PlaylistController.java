@@ -1,6 +1,7 @@
 package com.Profpost.api;
 
 import com.Profpost.model.entity.Playlist;
+import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user/playlist")
+@RequestMapping("/playlist")
 
 public class PlaylistController {
     private final PlaylistService playlistService;
@@ -41,5 +42,24 @@ public class PlaylistController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         playlistService.delete(id);
+    }
+
+    @GetMapping("/{playlistId}/publications")
+    public ResponseEntity<List<Publication>> getPublicationByPlaylist(@PathVariable Integer playlistId) {
+        List<Publication> publication = playlistService.getPublicationByPlaylistId(playlistId);
+        return ResponseEntity.ok(publication);
+    }
+
+    @PostMapping("/add/publication")
+    public ResponseEntity<Publication> addPublicationToPlaylist(@RequestParam Integer playlistId, @RequestParam Integer publicationId) {
+        Publication updatedpublication = playlistService.addPublicationToPlaylist(playlistId, publicationId);
+        return ResponseEntity.ok(updatedpublication);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{playlistId}/publications/{publicationsId}")
+    public ResponseEntity<Void> removePublicationFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer publicationId) {
+        playlistService.removePublicationFromPlaylist(playlistId, publicationId);
+        return ResponseEntity.noContent().build();
     }
 }

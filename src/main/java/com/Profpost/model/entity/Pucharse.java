@@ -31,7 +31,7 @@ public class Pucharse {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "subscription_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_pucharse_suscription"))
+    @JoinColumn(name = "subscription_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_pucharse_subscription"))
     private Subscription subscription;
 
     @ManyToOne

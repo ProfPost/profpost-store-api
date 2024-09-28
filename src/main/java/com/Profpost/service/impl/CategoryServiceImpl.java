@@ -1,13 +1,14 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.dto.CategoryDTO;
+import com.Profpost.exception.BadRequestException;
+import com.Profpost.exception.ResourceNotFoundExcept;
 import com.Profpost.mapper.CategoryMapper;
 import com.Profpost.model.entity.Category;
 import com.Profpost.repository.CategoryRepository;
 import com.Profpost.service.CategoryService;
 import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO findById(int id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("La categoria con ID"+id+"no fue encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID"+id+"no fue encontrada"));
         return categoryMapper.toDTO(category);
     }
 
@@ -44,7 +45,9 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO Create(CategoryDTO categoryDTO) {
         categoryRepository.findByName(categoryDTO.getName())
                 .ifPresent(existingCategory -> {
-                    throw new RuntimeException("La categoria ya existe con el mismo nombre");});
+                    throw new BadRequestException("La categoria ya existe con el mismo nombre");
+
+                });
 
         Category category = categoryMapper.toEntity(categoryDTO);
         category.setCreatedAt(LocalDateTime.now());
@@ -56,12 +59,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO Update(Integer id, CategoryDTO updateCategoryDTO) {
         Category categoryFromDb = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("La categoria con ID" + id + "no fue encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID" + id + "no fue encontrada"));
 
         categoryRepository.findByName(updateCategoryDTO.getName())
                 .filter(existingCategory -> !existingCategory.getName().equals(id))
                 .ifPresent(existingCategory -> {
-                    throw new RuntimeException("Ya existe otra categoria con el mismo nombre");
+                    throw new BadRequestException("Ya existe otra categoria con el mismo nombre");
 
                 });
         categoryFromDb.setName(updateCategoryDTO.getName());
@@ -76,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("La categoria con ID"+id+"no fue encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID"+id+"no fue encontrada"));
         categoryRepository.delete(category);
 
     }

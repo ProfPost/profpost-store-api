@@ -16,6 +16,6 @@ public class Reaction {
     private Integer value;
 
     @ManyToOne
-    @JoinColumn(name = "video_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_reaction_video"))
-    private Video video;
+    @JoinColumn(name = "publication_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_reaction_publication"))
+    private Publication publication;
 }

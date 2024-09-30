@@ -1,16 +1,17 @@
 package com.Profpost.service;
 
+import com.Profpost.dto.PlaylistDTO;
 import com.Profpost.model.entity.Playlist;
 import com.Profpost.model.entity.Publication;
 
 import java.util.List;
 
 public interface PlaylistService {
-    List<Playlist> findAll();
-    Playlist create(Playlist playlist);
-    Playlist findById(Integer id);
+    List<PlaylistDTO> findAll();
+    PlaylistDTO create(PlaylistDTO playlistDTO);
+    PlaylistDTO findById(Integer id);
 
-    Playlist update(Integer id, Playlist updatedPlaylist);
+    PlaylistDTO update(Integer id, PlaylistDTO updatedPlaylistDTO);
 
     void delete(Integer id);
 

@@ -1,7 +1,7 @@
 package com.Profpost.api;
-
-import com.Profpost.dto.PublicationDTO;
 import com.Profpost.model.entity.Category;
+import com.Profpost.dto.CategoryDTO;
+import com.Profpost.dto.PublicationDTO;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.Role;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.Profpost.mapper.CategoryMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class UserPublicationController {
     private final UserPublicationService userPublicationService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
     public ResponseEntity<List<Publication>> list(){
@@ -39,11 +40,12 @@ public class UserPublicationController {
     @PostMapping("/creators")
     public ResponseEntity<Publication> create(@RequestBody PublicationDTO publicationDTO){
         User user = userService.findById(publicationDTO.getUser_id());
-        Category category = categoryService.findById(publicationDTO.getCategory_id());
+        CategoryDTO categoryDTO = categoryService.findById(publicationDTO.getCategory_id());
 
         if(user.getRole() != Role.CREATOR){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        Category category = categoryMapper.toEntity(categoryDTO);
         Publication publication = userPublicationService.create(publicationDTO.toPublication(category, user));
         return new ResponseEntity<>(publication, HttpStatus.CREATED);
     }
@@ -53,7 +55,11 @@ public class UserPublicationController {
         Publication existingPublication = userPublicationService.findById(id);
 
         if (publicationDTO.getCategory_id() != null) {
-            Category category = categoryService.findById(publicationDTO.getCategory_id());
+            CategoryDTO categoryDTO = categoryService.findById(publicationDTO.getCategory_id());
+
+            // Convertir CategoryDTO a Category
+            Category category = categoryMapper.toEntity(categoryDTO);
+
             existingPublication.setCategory(category);
         }
 

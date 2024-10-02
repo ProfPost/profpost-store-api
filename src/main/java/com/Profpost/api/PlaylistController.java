@@ -1,5 +1,5 @@
 package com.Profpost.api;
-
+import com.Profpost.dto.PlaylistDTO;
 import com.Profpost.model.entity.Playlist;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
@@ -18,24 +18,24 @@ public class PlaylistController {
     private final PlaylistService playlistService;
 
     @GetMapping
-    public ResponseEntity<List<Playlist>> listUser(){
+    public ResponseEntity<List<PlaylistDTO>> listUser(){
         return ResponseEntity.ok(playlistService.findAll());
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Playlist create(@RequestBody Playlist playlist) {
-        return playlistService.create(playlist);
+    public PlaylistDTO create(@RequestBody PlaylistDTO playlistDTO) {
+        return playlistService.create(playlistDTO);
     }
 
     @GetMapping("/{id}")
-    public Playlist get(@PathVariable Integer id) {
+    public PlaylistDTO get(@PathVariable Integer id) {
         return playlistService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public Playlist update(@PathVariable Integer id, @RequestBody Playlist playlist) {
-        return playlistService.update(id, playlist);
+    public PlaylistDTO update(@PathVariable Integer id, @RequestBody PlaylistDTO playlistDTO) {
+        return playlistService.update(id, playlistDTO);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

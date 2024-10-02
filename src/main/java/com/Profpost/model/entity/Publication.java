@@ -1,5 +1,6 @@
 package com.Profpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -49,6 +50,7 @@ public class Publication {
     @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_user"))
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "playlist_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_playlist"))
     private Playlist playlist;

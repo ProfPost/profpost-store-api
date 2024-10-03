@@ -18,7 +18,7 @@ public class DonationMapper {
 
     public DonationDetailsDTO toDetailsDTO(Donation donation) {
         DonationDetailsDTO donationDetailsDTO = modelMapper.map(donation, DonationDetailsDTO.class);
-        donationDetailsDTO.setUsername(donation.getUser().getId());
+        donationDetailsDTO.setCreatorname(donation.getUser().getName());
         return donationDetailsDTO;
     }
 

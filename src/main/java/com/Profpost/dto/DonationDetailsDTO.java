@@ -8,5 +8,5 @@ public class DonationDetailsDTO {
     private Integer id;
 
     private float amount;
-    private Integer username;
+    private String creatorname;
 }

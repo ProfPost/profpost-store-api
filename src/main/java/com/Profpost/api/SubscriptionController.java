@@ -1,11 +1,14 @@
 package com.Profpost.api;
 
 import com.Profpost.dto.SubscriptionDTO;
+import com.Profpost.dto.SubscriptionReportDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
 import com.Profpost.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,5 +26,11 @@ public class SubscriptionController {
     public ResponseEntity<SubscriptionResponseDTO> unsubscribe(@PathVariable Integer subscriptionId) {
         SubscriptionResponseDTO response = subscriptionService.unsubscribe(subscriptionId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<List<SubscriptionReportDTO>> getSubscriptionReport() {
+        List<SubscriptionReportDTO> reports = subscriptionService.getSubscriptionReportByDate();
+        return ResponseEntity.ok(reports);
     }
 }

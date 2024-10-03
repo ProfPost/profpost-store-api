@@ -1,6 +1,7 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.dto.SubscriptionDTO;
+import com.Profpost.dto.SubscriptionReportDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
 import com.Profpost.model.entity.Plan;
 import com.Profpost.model.entity.Subscription;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -88,5 +91,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         response.setMessage("Subscription will end after 30 days!");
 
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<SubscriptionReportDTO> getSubscriptionReportByDate() {
+        List<Object[]>results = subscriptionRepository.getSubscriptionReportByDate();
+        //Mapeo de la lista de objetos a una lista de SubscriptionReportDTO
+        List<SubscriptionReportDTO> subscriptionReportDTOS = results.stream()
+                .map(result ->
+                        new SubscriptionReportDTO(((Integer)result[0]).intValue(),
+                                (String)result[1]
+                        )
+                ).toList();
+        return subscriptionReportDTOS;
     }
 }

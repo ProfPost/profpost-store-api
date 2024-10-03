@@ -1,7 +1,13 @@
 package com.Profpost.service.impl;
 
+import com.Profpost.dto.DonationCreateDTO;
+import com.Profpost.dto.DonationDetailsDTO;
+import com.Profpost.exception.InvalidOperationException;
+import com.Profpost.exception.ResourceNotFoundExcept;
+import com.Profpost.mapper.DonationMapper;
 import com.Profpost.model.entity.Donation;
 import com.Profpost.model.entity.User;
+import com.Profpost.model.enums.Role;
 import com.Profpost.repository.DonationRepository;
 import com.Profpost.repository.UserRepository;
 import com.Profpost.service.DonationService;
@@ -16,31 +22,56 @@ import java.util.List;
 @Service
 public class DonationServiceImpl implements DonationService {
 
-
     private final DonationRepository donationRepository;
     private final UserRepository userRepository;
+    private final DonationMapper donationMapper;
+
 
     @Transactional
     @Override
-    public Donation createdDonation(Integer userid, float amount) {
-        User user = userRepository.findById(userid)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Donation donation = new Donation();
-        donation.setAmount(amount);
+    public DonationDetailsDTO createDonation(DonationCreateDTO donationCreateDTO) {
+        User user = userRepository.findById(donationCreateDTO.getCreatorId())
+                .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + donationCreateDTO.getCreatorId()));
+
+        if (!user.getRole().equals(Role.CREATOR)) {
+            throw new InvalidOperationException("Solo los creadores pueden recibir donaciones");
+        }
+
+        Donation donation = donationMapper.toEntity(donationCreateDTO);
+        donation.setAmount(donationCreateDTO.getAmount());
         donation.setCreated_at(LocalDateTime.now());
         donation.setUser(user);
-        return donationRepository.save(donation);
+
+        return donationMapper.toDetailsDTO(donationRepository.save(donation));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public List<Donation> getDonorsAndAmounts(Integer creatorId) {
-        return donationRepository.findDonationsByUserId(creatorId);
+    public List<DonationDetailsDTO> getDonorsAndAmounts(Integer creatorId) {
+        List<Donation> donations = donationRepository.findDonationsByUserId(creatorId);
+
+
+        User user = userRepository.findById(creatorId)
+                .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + creatorId));
+
+        if (!user.getRole().equals(Role.CREATOR)) {
+            throw new InvalidOperationException("Solo los creadores pueden visualizar su lista de donaciones");
+        }
+
+        if (donations.isEmpty()) {
+            throw new ResourceNotFoundExcept("No existen donaciones para el creador ID: " + creatorId);
+        }
+        return donations.stream().map(donationMapper::toDetailsDTO).toList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Float getTotalDonationsByUserId(Integer creatorId) {
+        User user = userRepository.findById(creatorId)
+                .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + creatorId));
+        if (!user.getRole().equals(Role.CREATOR)) {
+            throw new InvalidOperationException("Solo los creadores pueden visualizar su total de donaciones");
+        }
         return donationRepository.getTotalDonationsByUserId(creatorId);
     }
 }

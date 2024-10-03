@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO findById(int id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID"+id+"no fue encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID "+ id +" no fue encontrada"));
         return categoryMapper.toDTO(category);
     }
 

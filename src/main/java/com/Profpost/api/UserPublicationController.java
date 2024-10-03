@@ -8,9 +8,11 @@ import com.Profpost.model.enums.Role;
 import com.Profpost.service.CategoryService;
 import com.Profpost.service.UserPublicationService;
 import com.Profpost.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.Profpost.mapper.CategoryMapper;
 import java.time.LocalDateTime;
@@ -38,13 +40,18 @@ public class UserPublicationController {
     }
 
     @PostMapping("/creators")
-    public ResponseEntity<Publication> create(@RequestBody PublicationDTO publicationDTO){
+    public ResponseEntity<?> create(@Valid @RequestBody PublicationDTO publicationDTO, BindingResult result){
+        if (result.hasErrors()) {
+            String errorMessage = result.getFieldError().getDefaultMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        }
         User user = userService.findById(publicationDTO.getUser_id());
         CategoryDTO categoryDTO = categoryService.findById(publicationDTO.getCategory_id());
 
         if(user.getRole() != Role.CREATOR){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("El usuario no es creador.", HttpStatus.FORBIDDEN);
         }
+
         Category category = categoryMapper.toEntity(categoryDTO);
         Publication publication = userPublicationService.create(publicationDTO.toPublication(category, user));
         return new ResponseEntity<>(publication, HttpStatus.CREATED);

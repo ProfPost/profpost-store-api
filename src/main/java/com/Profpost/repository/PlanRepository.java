@@ -1,12 +1,12 @@
 package com.Profpost.repository;
 
-import com.Profpost.model.entity.User;
+import com.Profpost.model.entity.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+public interface PlanRepository extends JpaRepository<Plan, Integer> {
+    Optional<Plan> findByName(String name);
 }

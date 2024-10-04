@@ -1,7 +1,9 @@
 package com.Profpost.api;
 
-import com.Profpost.model.entity.Donation;
+import com.Profpost.dto.DonationCreateDTO;
+import com.Profpost.dto.DonationDetailsDTO;
 import com.Profpost.service.DonationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +18,14 @@ public class DonationController {
     private final DonationService donationService;
 
     @PostMapping
-    public ResponseEntity<Donation> createDonation(@RequestBody Donation donationRequest) {
-        Integer creatorId = donationRequest.getId();
-        float amount = donationRequest.getAmount();
-        Donation donation = donationService.createdDonation(creatorId, amount);
-        return new ResponseEntity<>(donation, HttpStatus.CREATED);
+    public ResponseEntity<DonationDetailsDTO> createDonation(@Valid @RequestBody DonationCreateDTO donationCreateDTO) {
+        DonationDetailsDTO donationDetailsDTO = donationService.createDonation(donationCreateDTO);
+        return new ResponseEntity<>(donationDetailsDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/donors/{creatorId}")
-    public ResponseEntity<List<Donation>> getDonorsAndAmounts(@PathVariable Integer creatorId) {
-        List<Donation> donations = donationService.getDonorsAndAmounts(creatorId);
+    public ResponseEntity<List<DonationDetailsDTO>> getDonorsAndAmounts(@PathVariable Integer creatorId) {
+        List<DonationDetailsDTO> donations = donationService.getDonorsAndAmounts(creatorId);
         if (donations.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

@@ -1,6 +1,7 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.model.entity.User;
+import com.Profpost.model.enums.Role;
 import com.Profpost.repository.UserRepository;
 import com.Profpost.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,27 +24,34 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User create(User user) {
-        user.setCreatedAt(LocalDateTime.now());
-        return userRepository.save(user);
+    public User findById(Integer id) {
+        return userRepository.findById(id)
+                        .orElseThrow(()-> new RuntimeException("User not found"));
     }
 
     @Transactional
     @Override
-    public User findById(Integer id) {
-        return userRepository.findById(id).
-                orElseThrow(()-> new RuntimeException("User not found"));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional
     @Override
     public User update(Integer id, User updatedUser) {
+
         User userFromDb = findById(id);
+
         userFromDb.setName(updatedUser.getName());
         userFromDb.setEmail(updatedUser.getEmail());
         userFromDb.setPassword(updatedUser.getPassword());
         userFromDb.setBiography(updatedUser.getBiography());
         userFromDb.setUpdatedAt(LocalDateTime.now());
+
+        if (updatedUser.getRole() == Role.CREATOR){
+            userFromDb.setRole(Role.CREATOR);
+        }
+
         return userRepository.save(userFromDb);
     }
 
@@ -52,5 +60,17 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         User user = findById(id);
         userRepository.delete(user);
+    }
+
+    @Transactional
+    @Override
+    public User registerUser(User user) {
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        user.setRole(Role.READER);
+        user.setCreatedAt(LocalDateTime.now());
+
+        return userRepository.save(user);
     }
 }

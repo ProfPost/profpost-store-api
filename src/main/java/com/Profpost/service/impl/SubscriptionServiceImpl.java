@@ -1,20 +1,24 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.dto.SubscriptionDTO;
+import com.Profpost.dto.SubscriptionReportDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
+import com.Profpost.model.entity.Plan;
 import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.Role;
 import com.Profpost.model.enums.SubscriptionState;
+import com.Profpost.repository.PlanRepository;
 import com.Profpost.repository.SubscriptionRepository;
 import com.Profpost.repository.UserRepository;
 import com.Profpost.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.temporal.TemporalAdjusters;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ import java.util.Optional;
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
+    private final PlanRepository planRepository;
 
     @Transactional
     @Override
@@ -45,17 +50,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new RuntimeException("You are already subscribed to this creator.");
         }
 
+        Plan plan = planRepository.findById(subscriptionDTO.getPlan_id())
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+
         Subscription subscription = new Subscription();
         subscription.setStarDate(LocalDateTime.now());
         subscription.setSubscriptionState(SubscriptionState.SUBSCRIBE);
         subscription.setUser(user);
         subscription.setCreator(creator);
+        subscription.setPlan(plan);
 
         subscription = subscriptionRepository.save(subscription);
 
         SubscriptionResponseDTO response = new SubscriptionResponseDTO();
         response.setSubscriptionId(subscription.getId());
         response.setUserId(subscriptionDTO.getUser_id());
+        response.setPlan_id(subscriptionDTO.getPlan_id());
         response.setCreatorId(subscriptionDTO.getCreator_id());
         response.setStatus("Success");
         response.setMessage("Subscription created successfully!");
@@ -81,5 +91,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         response.setMessage("Subscription will end after 30 days!");
 
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<SubscriptionReportDTO> getSubscriptionReportByDate() {
+        List<Object[]>results = subscriptionRepository.getSubscriptionReportByDate();
+        //Mapeo de la lista de objetos a una lista de SubscriptionReportDTO
+        List<SubscriptionReportDTO> subscriptionReportDTOS = results.stream()
+                .map(result ->
+                        new SubscriptionReportDTO(((Integer)result[0]).intValue(),
+                                (String)result[1]
+                        )
+                ).toList();
+        return subscriptionReportDTOS;
     }
 }

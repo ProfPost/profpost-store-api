@@ -8,8 +8,11 @@ import com.Profpost.model.entity.Publication;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.Role;
 import com.Profpost.service.CategoryService;
+import com.Profpost.service.SubscriptionService;
 import com.Profpost.service.UserPublicationService;
 import com.Profpost.service.UserService;
+import com.Profpost.service.impl.EmailService;
+import com.Profpost.service.impl.SubscriptionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,8 @@ public class UserPublicationController {
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
     private final UserMapper userMapper;
+    private final SubscriptionServiceImpl subscriptionService;
+    private final EmailService emailService;
 
     @GetMapping
     public ResponseEntity<List<Publication>> list(){
@@ -50,6 +55,17 @@ public class UserPublicationController {
         CategoryDTO categoryDTO = categoryService.findById(publicationDTO.getCategory_id());
         Category category = categoryMapper.toEntity(categoryDTO);
         Publication publication = userPublicationService.create(publicationDTO.toPublication(category, user));
+
+        List<User> subscribers = subscriptionService.getSubscribersByCreatorId(user.getId());
+
+        for (User subscriber : subscribers) {
+            emailService.sendNotification(
+                    subscriber.getEmail(),
+                    "Nueva publicación de " + user.getName(),
+                    "Se ha creado una nueva publicación titulada: " + publication.getTitle()
+            );
+        }
+
         return new ResponseEntity<>(publication, HttpStatus.CREATED);
     }
 

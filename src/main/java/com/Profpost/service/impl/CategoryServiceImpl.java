@@ -1,8 +1,13 @@
 package com.Profpost.service.impl;
 
+import com.Profpost.dto.CategoryDTO;
+import com.Profpost.exception.BadRequestException;
+import com.Profpost.exception.ResourceNotFoundExcept;
+import com.Profpost.mapper.CategoryMapper;
 import com.Profpost.model.entity.Category;
 import com.Profpost.repository.CategoryRepository;
 import com.Profpost.service.CategoryService;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,47 +15,72 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Transactional(readOnly = true)
     @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getAll() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+        .map(categoryMapper::toDTO)
+        .toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Category findById(int id){
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
+    public CategoryDTO findById(int id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID"+id+"no fue encontrada"));
+        return categoryMapper.toDTO(category);
     }
 
     @Transactional
     @Override
-    public Category Create(Category category) {
+    public CategoryDTO Create(CategoryDTO categoryDTO) {
+        categoryRepository.findByName(categoryDTO.getName())
+                .ifPresent(existingCategory -> {
+                    throw new BadRequestException("La categoria ya existe con el mismo nombre");
+
+                });
+
+        Category category = categoryMapper.toEntity(categoryDTO);
         category.setCreatedAt(LocalDateTime.now());
-        return categoryRepository.save(category);
+        category = categoryRepository.save(category);
+        return categoryMapper.toDTO(category);
     }
 
     @Transactional
     @Override
-    public Category Update(Integer id, Category category) {
-        Category categoryFromDb = findById(id);  // Verificar que la categoría existe
-        categoryFromDb.setName(category.getName());
-        categoryFromDb.setDescription(category.getDescription());
-        categoryFromDb.setUpdatedAt(LocalDateTime.now());
-        return categoryRepository.save(categoryFromDb);
+    public CategoryDTO Update(Integer id, CategoryDTO updateCategoryDTO) {
+        Category categoryFromDb = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID" + id + "no fue encontrada"));
+
+        categoryRepository.findByName(updateCategoryDTO.getName())
+                .filter(existingCategory -> !existingCategory.getName().equals(id))
+                .ifPresent(existingCategory -> {
+                    throw new BadRequestException("Ya existe otra categoria con el mismo nombre");
+
+                });
+        categoryFromDb.setName(updateCategoryDTO.getName());
+        categoryFromDb.setDescription(updateCategoryDTO.getDescription());
+        categoryFromDb.setUpDatedAt(LocalDateTime.now());
+
+        categoryFromDb = categoryRepository.save(categoryFromDb);
+        return categoryMapper.toDTO(categoryFromDb);
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
-        Category category = findById(id);  // Verificar que la categoría existe
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExcept("La categoria con ID"+id+"no fue encontrada"));
         categoryRepository.delete(category);
+
     }
 }

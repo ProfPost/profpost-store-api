@@ -1,8 +1,10 @@
 package com.Profpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,4 +23,7 @@ public class Playlist {
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "playlist")
+    private List<Publication> publications;
 }

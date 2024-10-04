@@ -1,13 +1,14 @@
 package com.Profpost.service;
 
+import com.Profpost.dto.CategoryDTO;
 import com.Profpost.model.entity.Category;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<Category> getAll();
-    Category findById(int id);
-    Category Create(Category category);
-    Category Update(Integer id, Category category);
+    List<CategoryDTO> getAll();
+    CategoryDTO findById(int id);
+    CategoryDTO Create(CategoryDTO categoryDTO);
+    CategoryDTO Update(Integer id, CategoryDTO updateCategoryDTO);
     void delete(Integer id);
 }

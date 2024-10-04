@@ -1,5 +1,6 @@
 package com.Profpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,9 +8,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "blog")
+@Table(name = "publications")
 
-public class Blog {
+public class Publication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,6 +20,9 @@ public class Blog {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "url", unique = true)
+    private String video_url;
 
     @Column(name = "cover_path")
     private String coverPath;
@@ -39,11 +43,15 @@ public class Blog {
     private boolean isPublished;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_blog_category"))
+    @JoinColumn(name = "category_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_category"))
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_blog_user"))
+    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_user"))
     private User user;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "playlist_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_playlist"))
+    private Playlist playlist;
 }

@@ -1,7 +1,8 @@
 package com.Profpost.api;
 
-import com.Profpost.model.entity.Plan;
+import com.Profpost.dto.PlanDTO;
 import com.Profpost.service.PlanService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -17,26 +18,26 @@ public class PlanController {
     private final PlanService planService;
 
     @GetMapping
-    public ResponseEntity<List<Plan>>listPlan(){
-        List<Plan> blogs = planService.findAll();
-        return new ResponseEntity<>(blogs, HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<Plan> create(@RequestBody Plan plan){
-        Plan createdPlan = planService.create(plan);
-        return new ResponseEntity<>(createdPlan,HttpStatus.CREATED);
+    public ResponseEntity<List<PlanDTO>>listPlan(){
+        List<PlanDTO>plans = planService.findAll();
+        return new ResponseEntity<>(plans, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Plan> getById(@PathVariable Integer id){
-        Plan plan = planService.findById(id);
+    public ResponseEntity<PlanDTO> getById(@PathVariable Integer id){
+        PlanDTO plan = planService.findById(id);
         return new ResponseEntity<>(plan, HttpStatus.OK);
     }
 
+    @PostMapping
+    public ResponseEntity<PlanDTO> create(@Valid @RequestBody PlanDTO planDTO){
+        PlanDTO create = planService.create(planDTO);
+        return new ResponseEntity<>(create,HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Plan> update(@PathVariable Integer id, @RequestBody Plan plan){
-        Plan updatePlan = planService.update(id,plan);
+    public ResponseEntity<PlanDTO> update(@PathVariable Integer id, @Valid @RequestBody PlanDTO planDTO){
+        PlanDTO updatePlan = planService.update(id,planDTO);
         return new ResponseEntity<>(updatePlan,HttpStatus.OK);
     }
 

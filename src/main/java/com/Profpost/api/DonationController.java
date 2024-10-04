@@ -2,7 +2,6 @@ package com.Profpost.api;
 
 import com.Profpost.dto.DonationCreateDTO;
 import com.Profpost.dto.DonationDetailsDTO;
-import com.Profpost.model.entity.Donation;
 import com.Profpost.service.DonationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

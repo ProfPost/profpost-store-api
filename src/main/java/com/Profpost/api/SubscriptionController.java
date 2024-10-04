@@ -17,9 +17,12 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<SubscriptionResponseDTO> subscribe(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public ResponseEntity<String> subscribe(@RequestBody SubscriptionDTO subscriptionDTO) {
         SubscriptionResponseDTO response = subscriptionService.subscribe(subscriptionDTO);
-        return ResponseEntity.ok(response);
+
+        String plainTextResponse = response.getStatus() + ": " + response.getMessage();
+
+        return ResponseEntity.ok(plainTextResponse);
     }
 
     @DeleteMapping("/{subscriptionId}")

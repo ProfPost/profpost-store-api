@@ -106,4 +106,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 ).toList();
         return subscriptionReportDTOS;
     }
+
+    @Transactional(readOnly = true)
+    public List<User> getSubscribersByCreatorId(Integer creatorId) {
+        return subscriptionRepository.findAllSubscribersByCreatorId(creatorId);
+    }
+
 }

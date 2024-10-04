@@ -1,7 +1,6 @@
 package com.Profpost.api;
 
 import com.Profpost.dto.CategoryDTO;
-import com.Profpost.model.entity.Category;
 import com.Profpost.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

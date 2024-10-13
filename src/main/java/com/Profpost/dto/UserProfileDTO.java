@@ -7,9 +7,9 @@ import lombok.Data;
 public class UserProfileDTO {
 
     private int id;
+    private String name;
     private String email;
     private ERole role; // El rol puede ser ADMIN, READER o CREATOR
-    private String name;
 
     private String biography;
 }

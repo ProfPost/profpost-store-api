@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface CommentService {
     List<CommentDetailsDTO> getAll();
     CommentDetailsDTO Create(CommentCreateDTO commentCreateDTO);

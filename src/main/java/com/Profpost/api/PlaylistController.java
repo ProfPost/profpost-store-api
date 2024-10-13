@@ -1,6 +1,6 @@
 package com.Profpost.api;
+
 import com.Profpost.dto.PlaylistDTO;
-import com.Profpost.model.entity.Playlist;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
 import lombok.RequiredArgsConstructor;

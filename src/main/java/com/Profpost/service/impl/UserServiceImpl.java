@@ -1,6 +1,5 @@
 package com.Profpost.service.impl;
 
-import com.Profpost.dto.UserDTO;
 import com.Profpost.dto.UserProfileDTO;
 import com.Profpost.dto.UserRegistrationDTO;
 import com.Profpost.exception.ResourceNotFoundExcept;
@@ -34,29 +33,66 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
+    @Transactional
     @Override
     public UserProfileDTO registerReader(UserRegistrationDTO registrationDTO) {
         return registerUserWithRole(registrationDTO, ERole.READER);
     }
 
+    @Transactional
     @Override
     public UserProfileDTO registerCreator(UserRegistrationDTO registrationDTO) {
         return registerUserWithRole(registrationDTO, ERole.CREATOR);
     }
 
+    @Transactional
     @Override
     public UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO) {
-        return null;
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExcept("Usuario no encontrado"));
+
+        // Verificar si ya existe un cliente o autor con el mismo nombre y apellido (excepto el usuario actual)
+        boolean existsAsReader = readerRepository.existsByNameAndUserIdNot(
+                userProfileDTO.getName(), id);
+        boolean existsAsCreator = creatorRepository.existsByNameAndUserIdNot(
+                userProfileDTO.getName(), id);
+
+        if (existsAsReader && existsAsCreator) {
+            throw new IllegalArgumentException("Ya existe un usuario con el mismo username");
+        }
+
+        if (user.getReader() == null) {
+            Reader reader = new Reader();
+            user.getReader().setName(userProfileDTO.getName());
+            user.getReader().setBiography(userProfileDTO.getBiography());
+            user.getReader().setUpdatedAt(LocalDateTime.now());
+        }
+
+        if (user.getCreator() == null) {
+            Creator creator = new Creator();
+            user.getCreator().setName(userProfileDTO.getName());
+            user.getCreator().setBiography(userProfileDTO.getBiography());
+            user.getCreator().setUpdatedAt(LocalDateTime.now());
+        }
+
+        User updatedUser = userRepository.save(user);
+
+        return userMapper.toUserProfileDTO(updatedUser);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserProfileDTO getUserProfileById(Integer id) {
-        return null;
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundExcept("Usuario no encontrado"));
+
+        return userMapper.toUserProfileDTO(user);
     }
 
     private UserProfileDTO registerUserWithRole(UserRegistrationDTO registrationDTO, ERole roleEnum) {
 
-        // Verificar el email ya esta registradp o si ya existe uun usuario con el mismo nombre
+        // Verificar el email ya esta registradp o si ya existe un usuario con el mismo nombre
         boolean existsByEmail = userRepository.existsByEmail(registrationDTO.getEmail());
         boolean existsAsReader = readerRepository.existsByName(registrationDTO.getName());
         boolean existsAsCreator = creatorRepository.existsByName(registrationDTO.getName());
@@ -98,39 +134,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserProfileDTO(savedUser);
     }
 
-
-
-
-
     @Transactional(readOnly = true)
     @Override
-    public List<UserDTO> findAll() {
+    public List<UserProfileDTO> findAll() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(userMapper::toDTO)
+                .map(userMapper::toUserProfileDTO)
                 .toList();
-    }
-
-    @Transactional
-    @Override
-    public UserDTO registerUser(UserDTO userDTO) {
-        Optional<User> existingUser = userRepository.findByEmail(userDTO.getEmail());
-        if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("El email ya está registrado");
-        }
-        User user = userMapper.toEntity(userDTO);
-        user.setRole(ERole.READER);
-        user.setCreatedAt(LocalDateTime.now());
-        User newUser = userRepository.save(user);
-        return userMapper.toDTO(newUser);
-    }
-
-    @Transactional
-    @Override
-    public UserDTO findById(Integer id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExcept("Usuario no encontrado"));
-        return userMapper.toDTO(user);
     }
 
     @Transactional
@@ -138,23 +148,6 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Email no encontrado"));
-    }
-
-    @Transactional
-    @Override
-    public UserDTO update(Integer id, UserDTO updatedUserDTO) {
-        User userFromDb = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExcept("Usuario no encontrado"));
-        userFromDb.setName(updatedUserDTO.getName());
-        userFromDb.setEmail(updatedUserDTO.getEmail());
-        userFromDb.setPassword(updatedUserDTO.getPassword());
-        userFromDb.setBiography(updatedUserDTO.getBiography());
-        userFromDb.setUpdatedAt(LocalDateTime.now());
-        if (updatedUserDTO.getRole() == ERole.CREATOR) {
-            userFromDb.setRole(ERole.CREATOR);
-        }
-        User updatedUser = userRepository.save(userFromDb);
-        return userMapper.toDTO(updatedUser);
     }
 
     @Transactional

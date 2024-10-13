@@ -10,5 +10,5 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     boolean existsByName(String name);
 
     //Metodo para verificar si ya existe un lector con el mismo nombre y apellido, excepto el usuario actual
-    boolean existsByNameAnAndUserIdNot(String name, Integer userId);
+    boolean existsByNameAndUserIdNot(String name, Integer userId);
 }

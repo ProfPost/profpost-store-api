@@ -26,8 +26,8 @@ public class ReactionServiceImpl implements ReactionService {
     @Transactional(readOnly = true)
     @Override
     public List<ReactionDetailsDTO> getAll() {
-        List<Reaction> raactions = reactionRepository.findAll();
-        return raactions.stream()
+        List<Reaction> reactions = reactionRepository.findAll();
+        return reactions.stream()
                 .map(reactionMapper::toDetailsDTO)
                 .toList();
     }

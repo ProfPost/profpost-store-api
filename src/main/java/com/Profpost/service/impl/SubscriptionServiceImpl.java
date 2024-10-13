@@ -3,14 +3,13 @@ package com.Profpost.service.impl;
 import com.Profpost.dto.SubscriptionDTO;
 import com.Profpost.dto.SubscriptionReportDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
+import com.Profpost.exception.InvalidOperationException;
 import com.Profpost.model.entity.Plan;
 import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.ERole;
 import com.Profpost.model.enums.SubscriptionState;
-import com.Profpost.repository.PlanRepository;
-import com.Profpost.repository.SubscriptionRepository;
-import com.Profpost.repository.UserRepository;
+import com.Profpost.repository.*;
 import com.Profpost.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,23 +24,21 @@ import java.util.Optional;
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
+    private final CreatorRepository creatorRepository;
+    private final ReaderRepository readerRepository;
     private final PlanRepository planRepository;
 
     @Transactional
     @Override
     public SubscriptionResponseDTO subscribe(SubscriptionDTO subscriptionDTO){
         User user = userRepository.findById(subscriptionDTO.getUser_id())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (user.getRole() != ERole.READER) {
-            throw new RuntimeException("Only users with role READER can subscribe");
-        }
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + subscriptionDTO.getUser_id()));
 
         User creator = userRepository.findById(subscriptionDTO.getCreator_id())
-                .orElseThrow(() -> new RuntimeException("Creator not found"));
+                .orElseThrow(() -> new RuntimeException("Creador no encontrado con id: " + subscriptionDTO.getCreator_id()));
 
-        if (creator.getRole() != ERole.CREATOR) {
-            throw new RuntimeException("You can only subscribe to users with role CREATOR");
+        if (!creator.getRole().equals(ERole.CREATOR)) {
+            throw new InvalidOperationException("Solo puedes suscribirte a creadores");
         }
 
         Optional<Subscription> existingSubscription = subscriptionRepository.findByUserAndCreator(user, creator);

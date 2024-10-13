@@ -47,8 +47,8 @@ public class Publication {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_user"))
-    private User user;
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_creator"))
+    private Creator creator;
 
     @JsonIgnore
     @ManyToOne

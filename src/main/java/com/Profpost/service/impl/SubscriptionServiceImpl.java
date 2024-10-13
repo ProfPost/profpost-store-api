@@ -6,7 +6,7 @@ import com.Profpost.dto.SubscriptionResponseDTO;
 import com.Profpost.model.entity.Plan;
 import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.User;
-import com.Profpost.model.enums.Role;
+import com.Profpost.model.enums.ERole;
 import com.Profpost.model.enums.SubscriptionState;
 import com.Profpost.repository.PlanRepository;
 import com.Profpost.repository.SubscriptionRepository;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +33,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         User user = userRepository.findById(subscriptionDTO.getUser_id())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (user.getRole() != Role.READER) {
+        if (user.getRole() != ERole.READER) {
             throw new RuntimeException("Only users with role READER can subscribe");
         }
 
         User creator = userRepository.findById(subscriptionDTO.getCreator_id())
                 .orElseThrow(() -> new RuntimeException("Creator not found"));
 
-        if (creator.getRole() != Role.CREATOR) {
+        if (creator.getRole() != ERole.CREATOR) {
             throw new RuntimeException("You can only subscribe to users with role CREATOR");
         }
 

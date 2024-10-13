@@ -4,7 +4,7 @@ import com.Profpost.dto.UserDTO;
 import com.Profpost.exception.ResourceNotFoundExcept;
 import com.Profpost.mapper.UserMapper;
 import com.Profpost.model.entity.User;
-import com.Profpost.model.enums.Role;
+import com.Profpost.model.enums.ERole;
 import com.Profpost.repository.UserRepository;
 import com.Profpost.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("El email ya está registrado");
         }
         User user = userMapper.toEntity(userDTO);
-        user.setRole(Role.READER);
+        user.setRole(ERole.READER);
         user.setCreatedAt(LocalDateTime.now());
         User newUser = userRepository.save(user);
         return userMapper.toDTO(newUser);
@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
         userFromDb.setPassword(updatedUserDTO.getPassword());
         userFromDb.setBiography(updatedUserDTO.getBiography());
         userFromDb.setUpdatedAt(LocalDateTime.now());
-        if (updatedUserDTO.getRole() == Role.CREATOR) {
-            userFromDb.setRole(Role.CREATOR);
+        if (updatedUserDTO.getRole() == ERole.CREATOR) {
+            userFromDb.setRole(ERole.CREATOR);
         }
         User updatedUser = userRepository.save(userFromDb);
         return userMapper.toDTO(updatedUser);

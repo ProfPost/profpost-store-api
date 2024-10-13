@@ -6,9 +6,8 @@ import com.Profpost.dto.CategoryDTO;
 import com.Profpost.dto.PublicationDTO;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.model.entity.User;
-import com.Profpost.model.enums.Role;
+import com.Profpost.model.enums.ERole;
 import com.Profpost.service.CategoryService;
-import com.Profpost.service.SubscriptionService;
 import com.Profpost.service.UserPublicationService;
 import com.Profpost.service.UserService;
 import com.Profpost.service.impl.EmailService;
@@ -49,7 +48,7 @@ public class UserPublicationController {
     public ResponseEntity<Publication> create(@RequestBody PublicationDTO publicationDTO){
         UserDTO userDTO = userService.findById(publicationDTO.getUser_id());
         User user = userMapper.toEntity(userDTO);
-        if(user.getRole() != Role.CREATOR){
+        if(user.getRole() != ERole.CREATOR){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         CategoryDTO categoryDTO = categoryService.findById(publicationDTO.getCategory_id());

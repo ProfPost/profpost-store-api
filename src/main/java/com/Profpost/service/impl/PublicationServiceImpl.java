@@ -37,6 +37,13 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     @Override
     public PublicationDTO create(PublicationDTO publicationDTO) {
+        if (publicationDTO.getCreator_id() == null) {
+            throw new IllegalArgumentException("El ID del creador no puede ser nulo");
+        }
+        if (publicationDTO.getCategory_id() == null) {
+            throw new IllegalArgumentException("El ID de la categoría no puede ser nulo");
+        }
+
         Creator creator = creatorRepository.findById(publicationDTO.getCreator_id())
                 .orElseThrow(() -> new RuntimeException("Creator not found with id: " + publicationDTO.getCreator_id()));
         Category category = categoryRepository.findById(publicationDTO.getCategory_id())
@@ -60,7 +67,7 @@ public class PublicationServiceImpl implements PublicationService {
 
         Publication savedPublication = publicationRepository.save(publication);
 
-        List<User> subscribers = subscriptionRepository.findAllSubscribersByCreatorId(creator.getId());
+        List<User> subscribers = subscriptionRepository.getSubscribersByCreatorId(creator.getId());
         for (User subscriber : subscribers) {
             emailService.sendNotification(
                     subscriber.getEmail(),

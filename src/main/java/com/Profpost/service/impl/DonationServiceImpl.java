@@ -33,7 +33,7 @@ public class DonationServiceImpl implements DonationService {
         User user = userRepository.findById(donationCreateDTO.getCreatorId())
                 .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + donationCreateDTO.getCreatorId()));
 
-        if (!user.getRole().equals(ERole.CREATOR)) {
+        if (user.getCreator() == null) {
             throw new InvalidOperationException("Solo los creadores pueden recibir donaciones");
         }
 
@@ -54,7 +54,7 @@ public class DonationServiceImpl implements DonationService {
         User user = userRepository.findById(creatorId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + creatorId));
 
-        if (!user.getRole().equals(ERole.CREATOR)) {
+        if (user.getCreator() == null) {
             throw new InvalidOperationException("Solo los creadores pueden visualizar su lista de donaciones");
         }
 
@@ -69,7 +69,7 @@ public class DonationServiceImpl implements DonationService {
     public Float getTotalDonationsByUserId(Integer creatorId) {
         User user = userRepository.findById(creatorId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + creatorId));
-        if (!user.getRole().equals(ERole.CREATOR)) {
+        if (user.getCreator() == null) {
             throw new InvalidOperationException("Solo los creadores pueden visualizar su total de donaciones");
         }
         return donationRepository.getTotalDonationsByUserId(creatorId);

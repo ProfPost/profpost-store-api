@@ -18,5 +18,5 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     List<Object[]> getSubscriptionReportByDate();
 
     @Query("SELECT s.user FROM Subscription s WHERE s.creator.id = :creatorId AND s.subscriptionState = 'SUBSCRIBE'")
-    List<User> findAllSubscribersByCreatorId(Integer creatorId);
+    List<User> getSubscribersByCreatorId(Integer creatorId);
 }

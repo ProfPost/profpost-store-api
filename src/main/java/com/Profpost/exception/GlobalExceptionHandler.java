@@ -26,6 +26,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(ResourceNotFoundExcept.class)
+  public ResponseEntity<CustomErrorResponse> handleModelNotFoundExcept(ResourceNotFoundExcept ex, WebRequest request){
+    CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(),
+            ex.getMessage(),
+            request.getDescription(false));
+
+    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler(BadRequestException.class)
   public ResponseEntity<CustomErrorResponse> handleModelNotFoundException(BadRequestException ex, WebRequest request){
     CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));

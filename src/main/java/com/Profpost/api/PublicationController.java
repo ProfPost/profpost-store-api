@@ -8,7 +8,7 @@ import com.Profpost.model.entity.Publication;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.ERole;
 import com.Profpost.service.CategoryService;
-import com.Profpost.service.UserPublicationService;
+import com.Profpost.service.PublicationService;
 import com.Profpost.service.UserService;
 import com.Profpost.service.impl.EmailService;
 import com.Profpost.service.impl.SubscriptionServiceImpl;
@@ -23,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/publications")
-public class UserPublicationController {
-    private final UserPublicationService userPublicationService;
+public class PublicationController {
+    private final PublicationService userPublicationService;
     private final UserService userService;
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;

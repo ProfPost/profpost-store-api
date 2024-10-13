@@ -4,7 +4,7 @@ import com.Profpost.model.entity.Publication;
 
 import java.util.List;
 
-public interface UserPublicationService {
+public interface PublicationService {
     List<Publication> findAll();
     Publication create(Publication publication);
     Publication findById(Integer id);

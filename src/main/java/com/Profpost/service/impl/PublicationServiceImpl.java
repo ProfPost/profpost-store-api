@@ -6,7 +6,7 @@ import com.Profpost.model.entity.User;
 import com.Profpost.repository.PublicationRepository;
 import com.Profpost.repository.CategoryRepository;
 import com.Profpost.repository.UserRepository;
-import com.Profpost.service.UserPublicationService;
+import com.Profpost.service.PublicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class UserPublicationServiceImpl implements UserPublicationService {
+public class PublicationServiceImpl implements PublicationService {
     private final PublicationRepository publicationRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;

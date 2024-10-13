@@ -52,30 +52,38 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Usuario no encontrado"));
 
-        // Verificar si ya existe un cliente o autor con el mismo nombre y apellido (excepto el usuario actual)
-        boolean existsAsReader = readerRepository.existsByNameAndUserIdNot(
-                userProfileDTO.getName(), id);
-        boolean existsAsCreator = creatorRepository.existsByNameAndUserIdNot(
-                userProfileDTO.getName(), id);
+        // Solo actualizamos el nombre si se ha proporcionado
+        if (userProfileDTO.getName() != null && !userProfileDTO.getName().isEmpty()) {
+            boolean existsAsReader = readerRepository.existsByNameAndUserIdNot(userProfileDTO.getName(), id);
+            boolean existsAsCreator = creatorRepository.existsByNameAndUserIdNot(userProfileDTO.getName(), id);
 
-        if (existsAsReader && existsAsCreator) {
-            throw new IllegalArgumentException("Ya existe un usuario con el mismo username");
+            if (existsAsReader || existsAsCreator) {
+                throw new IllegalArgumentException("Ya existe un usuario con el mismo username");
+            }
+
+            if (user.getReader() != null) {
+                user.getReader().setName(userProfileDTO.getName());
+            }
+
+            if (user.getCreator() != null) {
+                user.getCreator().setName(userProfileDTO.getName());
+            }
         }
 
-        if (user.getReader() == null) {
-            Reader reader = new Reader();
-            user.getReader().setName(userProfileDTO.getName());
-            user.getReader().setBiography(userProfileDTO.getBiography());
-            user.getReader().setUpdatedAt(LocalDateTime.now());
+        // Actualizamos la biografía si está presente
+        if (userProfileDTO.getBiography() != null && !userProfileDTO.getBiography().isEmpty()) {
+            if (user.getReader() != null) {
+                user.getReader().setBiography(userProfileDTO.getBiography());
+                user.getReader().setUpdatedAt(LocalDateTime.now());
+            }
+
+            if (user.getCreator() != null) {
+                user.getCreator().setBiography(userProfileDTO.getBiography());
+                user.getCreator().setUpdatedAt(LocalDateTime.now());
+            }
         }
 
-        if (user.getCreator() == null) {
-            Creator creator = new Creator();
-            user.getCreator().setName(userProfileDTO.getName());
-            user.getCreator().setBiography(userProfileDTO.getBiography());
-            user.getCreator().setUpdatedAt(LocalDateTime.now());
-        }
-
+        // Guardamos los cambios
         User updatedUser = userRepository.save(user);
 
         return userMapper.toUserProfileDTO(updatedUser);
@@ -101,7 +109,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("El email ya esta registrado");
         }
 
-        if (existsAsReader && existsAsCreator) {
+        if (existsAsReader || existsAsCreator) {
             throw new IllegalArgumentException("Ya existe un usuario con el mismo username");
         }
 

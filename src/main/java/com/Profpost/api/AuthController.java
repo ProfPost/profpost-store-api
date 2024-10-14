@@ -1,6 +1,6 @@
 package com.Profpost.api;
 
-import com.Profpost.dto.LoginRequestDTO;
+import com.Profpost.dto.LoginDTO;
 import com.Profpost.dto.UserProfileDTO;
 import com.Profpost.dto.UserRegistrationDTO;
 import com.Profpost.model.entity.User;
@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDTO loginRequestDTO) {
         User user = userService.findByEmail(loginRequestDTO.getEmail());
         if (user != null && userService.checkPassword(loginRequestDTO.getPassword(), user.getPassword())) {
             return new ResponseEntity<>("Login successful", HttpStatus.OK);

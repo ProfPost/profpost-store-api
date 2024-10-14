@@ -1,5 +1,7 @@
 package com.Profpost.service.impl;
 
+import com.Profpost.dto.AuthResponseDTO;
+import com.Profpost.dto.LoginDTO;
 import com.Profpost.dto.UserProfileDTO;
 import com.Profpost.dto.UserRegistrationDTO;
 import com.Profpost.exception.ResourceNotFoundExcept;
@@ -13,8 +15,12 @@ import com.Profpost.repository.CreatorRepository;
 import com.Profpost.repository.ReaderRepository;
 import com.Profpost.repository.RoleRepository;
 import com.Profpost.repository.UserRepository;
+import com.Profpost.security.UserPrincipal;
 import com.Profpost.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +32,29 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final ReaderRepository readerRepository;
     private final CreatorRepository creatorRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private AuthenticationManager authenticationManager;
+
+    @Override
+    public AuthResponseDTO login(LoginDTO loginDTO) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
+        );
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.getUser();
+
+        String token = "dasdasdsa";
+
+        AuthResponseDTO responseDTO = userMapper.toAuthResponseDTO(user,token);
+
+        return responseDTO;
+    }
 
     @Transactional
     @Override
@@ -166,8 +189,4 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
-    @Override
-    public boolean checkPassword(String inputPassword, String storedPassword) {
-        return inputPassword.equals(storedPassword);
-    }
 }

@@ -2,11 +2,13 @@ package com.Profpost.api;
 
 import com.Profpost.dto.DonationCreateDTO;
 import com.Profpost.dto.DonationDetailsDTO;
+import com.Profpost.dto.DonationTotalDTO;
 import com.Profpost.service.DonationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +16,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/donation")
+@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
+
 public class DonationController {
     private final DonationService donationService;
 
     @PostMapping
+    @PreAuthorize("hasRole('READER')")
     public ResponseEntity<DonationDetailsDTO> createDonation(@Valid @RequestBody DonationCreateDTO donationCreateDTO) {
         DonationDetailsDTO donationDetailsDTO = donationService.createDonation(donationCreateDTO);
         return new ResponseEntity<>(donationDetailsDTO, HttpStatus.CREATED);
@@ -33,11 +38,12 @@ public class DonationController {
     }
 
     @GetMapping("/total/{creatorId}")
-    public ResponseEntity<Float> getDonationAmount(@PathVariable Integer creatorId) {
+    public ResponseEntity<DonationTotalDTO> getDonationAmount(@PathVariable Integer creatorId) {
         Float totalDonations = donationService.getTotalDonationsByUserId(creatorId);
         if (totalDonations == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(totalDonations);
+        DonationTotalDTO donationTotalDTO = new DonationTotalDTO(totalDonations);
+        return ResponseEntity.ok(donationTotalDTO);
     }
 }

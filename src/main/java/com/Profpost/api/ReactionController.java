@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/publication/reactions")
+@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
 
 public class ReactionController {
     private final ReactionService reactionService;
@@ -25,11 +27,13 @@ public class ReactionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('READER')")
     public ResponseEntity<ReactionDetailsDTO> Create(@Valid @RequestBody ReactionCreateDTO reactionCreateDTO){
         ReactionDetailsDTO createreaction = reactionService.Create(reactionCreateDTO);
         return new ResponseEntity<>(createreaction, HttpStatus.CREATED);
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('READER')")
     public ResponseEntity<Void> Delete(@PathVariable Integer id){
         reactionService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,11 +1,12 @@
 package com.Profpost.api;
+
 import com.Profpost.dto.PlaylistDTO;
-import com.Profpost.model.entity.Playlist;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/playlist")
+@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR', 'READER')")
 
 public class PlaylistController {
     private final PlaylistService playlistService;

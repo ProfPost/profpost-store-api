@@ -1,39 +1,30 @@
 package com.Profpost.model.entity;
 
-import com.Profpost.model.enums.Role;
-import com.Profpost.model.enums.SubscriptionState;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.Data;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
 @Data
 @Entity
-@Table(name = "account")
+@Table(name = "accounts")
 
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String password;
 
-    @Column(name = "biography", columnDefinition = "TEXT")
-    private String biography;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Reader reader;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Creator creator;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", referencedColumnName ="id" )
     private Role role;
-
-    @Enumerated(EnumType.STRING)
-    private SubscriptionState subscriptionState;
 }

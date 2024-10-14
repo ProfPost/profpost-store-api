@@ -189,4 +189,9 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
+    @Override
+    public boolean checkPassword(String inputPassword, String storedPassword) {
+        return inputPassword.equals(storedPassword);
+    }
+
 }

@@ -19,4 +19,5 @@ public interface UserService {
     UserProfileDTO getUserProfileById(Integer id);
 
     void delete(Integer id);
+    public boolean checkPassword(String inputPassword, String storedPassword);
 }

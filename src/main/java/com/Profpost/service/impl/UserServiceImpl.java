@@ -15,6 +15,7 @@ import com.Profpost.repository.CreatorRepository;
 import com.Profpost.repository.ReaderRepository;
 import com.Profpost.repository.RoleRepository;
 import com.Profpost.repository.UserRepository;
+import com.Profpost.security.TokenProvider;
 import com.Profpost.security.UserPrincipal;
 import com.Profpost.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,17 +40,21 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private AuthenticationManager authenticationManager;
 
+    private final AuthenticationManager authenticationManager;
+    private final TokenProvider tokenProvider;
+
+    @Transactional
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         User user = userPrincipal.getUser();
 
-        String token = "dasdasdsa";
+        String token = tokenProvider.createAccessToken(authentication);
 
         AuthResponseDTO responseDTO = userMapper.toAuthResponseDTO(user,token);
 
@@ -187,11 +192,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExcept("El usuario con ID"+id+"no fue encontrado"));
         userRepository.delete(user);
-    }
-
-    @Override
-    public boolean checkPassword(String inputPassword, String storedPassword) {
-        return inputPassword.equals(storedPassword);
     }
 
 }

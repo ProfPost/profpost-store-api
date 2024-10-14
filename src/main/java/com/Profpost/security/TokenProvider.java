@@ -22,10 +22,10 @@ import java.util.List;
 @Component
 public class TokenProvider {
 
-    @Value("$(jwt.secret)")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("$(jwt.validity-in-seconds)")
+    @Value("${jwt.validity-in-seconds}")
     private long jwtValidityInSeconds;
 
     private Key key;

@@ -1,7 +1,9 @@
 package com.Profpost.api;
 
-import com.Profpost.dto.PublicationDTO;
+import com.Profpost.dto.PublicationCreateDTO;
+import com.Profpost.dto.PublicationDetailsDTO;
 import com.Profpost.service.PublicationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,26 +22,26 @@ public class PublicationController {
     private final PublicationService publicationService;
 
     @GetMapping
-    public ResponseEntity<List<PublicationDTO>> list() {
-        List<PublicationDTO> publications = publicationService.findAll();
+    public ResponseEntity<List<PublicationDetailsDTO>> list() {
+        List<PublicationDetailsDTO> publications = publicationService.findAll();
         return new ResponseEntity<>(publications, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PublicationDTO> get(@PathVariable Integer id) {
-        PublicationDTO publication = publicationService.findById(id);
+    public ResponseEntity<PublicationDetailsDTO> get(@PathVariable Integer id) {
+        PublicationDetailsDTO publication = publicationService.findById(id);
         return new ResponseEntity<>(publication, HttpStatus.OK);
     }
 
     @PostMapping("/creators")
-    public ResponseEntity<PublicationDTO> create(@RequestBody PublicationDTO publicationDTO) {
-        PublicationDTO createdPublication = publicationService.create(publicationDTO);
+    public ResponseEntity<PublicationDetailsDTO> create(@Valid @RequestBody PublicationCreateDTO publicationCreateDTO) {
+        PublicationDetailsDTO createdPublication = publicationService.create(publicationCreateDTO);
         return new ResponseEntity<>(createdPublication, HttpStatus.CREATED);
     }
 
     @PutMapping("/creators/{id}")
-    public ResponseEntity<PublicationDTO> update(@PathVariable Integer id, @RequestBody PublicationDTO publicationDTO) {
-        PublicationDTO updatedPublication = publicationService.update(id, publicationDTO);
+    public ResponseEntity<PublicationDetailsDTO> update(@PathVariable Integer id, @Valid @RequestBody PublicationCreateDTO publicationCreateDTO) {
+        PublicationDetailsDTO updatedPublication = publicationService.update(id, publicationCreateDTO);
         return new ResponseEntity<>(updatedPublication, HttpStatus.OK);
     }
     

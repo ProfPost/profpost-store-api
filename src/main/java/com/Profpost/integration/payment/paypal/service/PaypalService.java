@@ -54,11 +54,12 @@ public class PaypalService {
                                 .encodeToString((clientId + ":" + clientSecret).getBytes()))
                         .body(body)
                         .retrieve()
-                        .toEntity(TokenResponse.class).getBody())
+                        .toEntity(TokenResponse.class)
+                        .getBody())
         .getAccessToken();
     }
 
-    public OrderResponse createOrder(Integer purchaseId, String returnUrl, String CancelUrl){
+    public OrderResponse createOrder(Integer purchaseId, String returnUrl, String cancelUrl){
         Purchase purchase = purchaseRepository.findById(purchaseId)
                 .orElseThrow(ResourceNotFoundExcept::new);
 
@@ -78,7 +79,7 @@ public class PaypalService {
         ApplicationContext applicationContext = ApplicationContext.builder()
                 .brandName("ProfPost")
                 .returnURL(returnUrl)
-                .cancelURL(CancelUrl)
+                .cancelURL(cancelUrl)
                 .build();
 
         orderRequest.setApplicationContext(applicationContext);

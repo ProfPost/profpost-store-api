@@ -7,6 +7,7 @@ import com.Profpost.model.entity.Purchase;
 import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.PaymentStatus;
+import com.Profpost.model.enums.SubscriptionState;
 import com.Profpost.repository.DonationRepository;
 import com.Profpost.repository.PurchaseRepository;
 import com.Profpost.repository.SubscriptionRepository;
@@ -79,5 +80,41 @@ public class PurchaseServiceImpl implements PurchaseService {
             responseDTO.setDonationId(purchase.getDonation() != null ? purchase.getDonation().getId() : null);
             return responseDTO;
         }).toList();
+    }
+
+    @Override
+    public PurchaseDTO confirmPurchase(Integer purchaseId) {
+        Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(() -> new RuntimeException("Purchase Not Found"));
+        purchase.setPayment_status(PaymentStatus.PAID);
+
+        Purchase updatedPurchase = purchaseRepository.save(purchase);
+
+        PurchaseDTO purchaseDTO = new PurchaseDTO();
+        purchaseDTO.setId(updatedPurchase.getId());
+        purchaseDTO.setTotal(updatedPurchase.getTotal());
+        purchaseDTO.setPaymentStatus(updatedPurchase.getPayment_status().name());
+        purchaseDTO.setCreatedAt(updatedPurchase.getCreated_at().toString());
+        purchaseDTO.setUserId(updatedPurchase.getUser().getId());
+        purchaseDTO.setSubscriptionId(updatedPurchase.getSubscription() != null ? updatedPurchase.getSubscription().getId() : null);
+        purchaseDTO.setDonationId(updatedPurchase.getDonation() != null ? updatedPurchase.getDonation().getId() : null);
+
+        if (updatedPurchase.getSubscription() != null) {
+            Subscription subscription = updatedPurchase.getSubscription();
+            subscription.setSubscriptionState(SubscriptionState.SUBSCRIBE);
+            subscription.setStarDate(LocalDateTime.now());
+
+            if (subscription.getPlan() == null) {
+                throw new RuntimeException("Plan is required for the subscription");
+            }
+
+            subscriptionRepository.save(subscription);
+        }
+        if (updatedPurchase.getDonation() != null) {
+            Donation donation = updatedPurchase.getDonation();
+            donation.setPayment_status(PaymentStatus.PAID);
+            donationRepository.save(donation);
+        }
+
+        return purchaseDTO;
     }
 }

@@ -1,5 +1,6 @@
 package com.Profpost.model.entity;
 
+import com.Profpost.model.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,4 +23,7 @@ public class Donation {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_donation_usuario"))
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus payment_status;
 }

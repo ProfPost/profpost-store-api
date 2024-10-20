@@ -2,11 +2,10 @@ package com.Profpost.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class LoginRequestDTO {
+public class LoginDTO {
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El email debe ser válido")
     private String email;

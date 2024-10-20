@@ -24,11 +24,11 @@ public class Publication {
     @Column(name = "url", unique = true)
     private String video_url;
 
-    @Column(name = "cover_path")
-    private String coverPath;
-
     @Column(name = "file_path")
     private String filePath;
+
+    @Column(name = "visibility")
+    private String visibility;
 
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
@@ -47,8 +47,8 @@ public class Publication {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_user"))
-    private User user;
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_creator"))
+    private Creator creator;
 
     @JsonIgnore
     @ManyToOne

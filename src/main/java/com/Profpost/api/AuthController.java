@@ -1,8 +1,9 @@
 package com.Profpost.api;
 
-import com.Profpost.dto.LoginRequestDTO;
-import com.Profpost.dto.UserDTO;
-import com.Profpost.model.entity.User;
+import com.Profpost.dto.AuthResponseDTO;
+import com.Profpost.dto.LoginDTO;
+import com.Profpost.dto.UserProfileDTO;
+import com.Profpost.dto.UserRegistrationDTO;
 import com.Profpost.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+
 public class AuthController {
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        User user = userService.findByEmail(loginRequestDTO.getEmail());
-        if (user != null && userService.checkPassword(loginRequestDTO.getPassword(), user.getPassword())) {
-            return new ResponseEntity<>("Login successful", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Login failed", HttpStatus.UNAUTHORIZED);
-        }
+    // Endpoint para registrar lector
+    @PostMapping("/register/reader")
+    public ResponseEntity<UserProfileDTO> registerReader(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
+        UserProfileDTO userProfile = userService.registerReader(userRegistrationDTO);
+        return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@Valid @RequestBody UserDTO userDTO) {
-        UserDTO newUserDTO = userService.registerUser(userDTO);
-        return new ResponseEntity<>(newUserDTO, HttpStatus.CREATED);
+    // Endpoint para registrar creador
+    @PostMapping("/register/creator")
+    public ResponseEntity<UserProfileDTO> registerCreator(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
+        UserProfileDTO userProfile = userService.registerCreator(userRegistrationDTO);
+        return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+        AuthResponseDTO authResponse = userService.login(loginDTO);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 }

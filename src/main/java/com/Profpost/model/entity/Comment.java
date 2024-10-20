@@ -20,7 +20,7 @@ public class Comment {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publication_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_coment_publication"))
     private Publication publication;
 

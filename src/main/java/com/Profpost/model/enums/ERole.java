@@ -1,6 +1,7 @@
 package com.Profpost.model.enums;
 
-public enum Role {
+public enum ERole {
+    ADMIN,
     CREATOR,
     READER
 }

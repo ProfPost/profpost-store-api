@@ -4,9 +4,11 @@ import com.Profpost.model.entity.Donation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface DonationRepository extends JpaRepository<Donation, Integer> {
 
     @Query("SELECT COALESCE(SUM(donation.amount), 0) FROM Donation donation WHERE donation.user.id = :userId")

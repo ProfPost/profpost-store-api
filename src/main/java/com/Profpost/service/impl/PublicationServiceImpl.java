@@ -1,6 +1,7 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.dto.PublicationDTO;
+import com.Profpost.integration.notification.email.service.EmailService;
 import com.Profpost.mapper.PublicationMapper;
 import com.Profpost.model.entity.Category;
 import com.Profpost.model.entity.Creator;

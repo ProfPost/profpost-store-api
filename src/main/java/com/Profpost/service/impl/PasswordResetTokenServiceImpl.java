@@ -10,6 +10,7 @@ import com.Profpost.repository.UserRepository;
 import com.Profpost.service.PasswordResetTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${spring.mail.username}")
     private String mailFrom;
@@ -80,7 +82,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
                 .orElseThrow(() -> new ResourceNotFoundException("Token no encontrado con token: " + token));
 
         User user = resetToken.getUser();
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         passwordResetTokenRepository.delete(resetToken);
     }

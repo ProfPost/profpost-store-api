@@ -6,23 +6,28 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #e5e8d8;
+            color: #262626;
             margin: 0;
             padding: 0;
         }
         .container {
             width: 80%;
             margin: 0 auto;
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 20px;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         header, footer {
-            background-color: #007BFF;
-            color: #fff;
+            background-color: #087443;
+            color: #ffffff;
             text-align: center;
             padding: 10px 0;
+            border-radius: 8px 8px 0 0;
+        }
+        footer {
+            border-radius: 0 0 8px 8px;
         }
         table {
             width: 100%;
@@ -30,24 +35,28 @@
             margin: 20px 0;
         }
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #999999;
         }
         th, td {
             padding: 12px;
             text-align: left;
         }
         th {
-            background-color: #007BFF;
-            color: white;
+            background-color: #323F59;
+            color: #ffffff;
         }
         a.button {
             display: inline-block;
-            background-color: #28a745;
-            color: white;
+            background-color: #0D0D0D;
+            color: #ffffff;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        a.button:hover {
+            background-color: #262626;
         }
     </style>
 </head>
@@ -72,10 +81,13 @@
     </table>
 
     <p>Puedes ver más detalles de tu orden en el siguiente enlace:</p>
-    <a th:href="${orderUrl}" class="button">Ver mi Orden</a>
+    <div style="text-align: center;">
+        <a th:href="${orderUrl}" class="button">Ver mi Orden</a>
+    </div>
+
 
     <footer>
-        <p>&copy; 2024 ProfPost</p>
+        <p>&copy; 2024 ProfPost. Todos los derechos reservados.</p>
     </footer>
 </div>
 </body>

@@ -69,13 +69,12 @@ Para entender mejor la estructura y diseño de la aplicación "BookHub", revisa 
 
 ### Diagrama de Clases
 
-![Diagrama de clases](https://github.com/user-attachments/assets/2b59904b-0d5d-4328-8933-6f2bdef7c89d)
+![Diagrama de clases](https://github.com/user-attachments/assets/3cd5d80b-6b8c-4dcb-9154-5f99ad87ec53)
 
 
 ### Diagrama de Base de Datos
 
-![Diagrama de Base de Datos](https://github.com/user-attachments/assets/cbc7737c-4c50-4531-bb54-e2cd751793d4)
-
+![Diagrama de Base de Datos](https://github.com/user-attachments/assets/692cde35-af6b-4bd2-b469-c51d946b58ff)
 
 Este diagrama ilustra el esquema de la base de datos utilizada por la aplicación, mostrando las tablas, columnas, y relaciones entre las entidades.
 

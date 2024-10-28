@@ -3,6 +3,7 @@ package com.Profpost.api;
 import com.Profpost.dto.PaymentCaptureResponse;
 import com.Profpost.dto.PaymentOrderResponse;
 import com.Profpost.service.CheckoutService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class CheckoutController {
     public ResponseEntity<PaymentCaptureResponse> capturePaymentOrder(
             @RequestParam String orderId,
             @RequestParam(required = false, defaultValue = "paypal") String paymentProvider
-    ){
+    ) throws MessagingException {
         PaymentCaptureResponse response = checkoutService.capturePayment(orderId);
         if (response.isCompleted()){
             return new ResponseEntity<>(response, HttpStatus.OK);

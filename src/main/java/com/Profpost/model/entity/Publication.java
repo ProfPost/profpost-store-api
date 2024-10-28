@@ -24,11 +24,11 @@ public class Publication {
     @Column(name = "url", unique = true)
     private String video_url;
 
-    @Column(name = "cover_path")
-    private String coverPath;
-
     @Column(name = "file_path")
     private String filePath;
+
+    @Column(name = "visibility")
+    private String visibility;
 
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;

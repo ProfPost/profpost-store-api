@@ -1,7 +1,10 @@
 package com.Profpost.service.impl;
 
+
 import com.Profpost.dto.PublicationDTO;
 import com.Profpost.integration.notification.email.service.EmailService;
+import com.Profpost.dto.PublicationCreateDTO;
+import com.Profpost.dto.PublicationDetailsDTO;
 import com.Profpost.mapper.PublicationMapper;
 import com.Profpost.model.entity.Category;
 import com.Profpost.model.entity.Creator;
@@ -28,34 +31,34 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<PublicationDTO> findAll() {
+    public List<PublicationDetailsDTO> findAll() {
         List<Publication> publications = publicationRepository.findAll();
         return publications.stream()
-                .map(publicationMapper::toDTO)
+                .map(publicationMapper::toDetailsDTO)
                 .toList();
     }
 
     @Transactional
     @Override
-    public PublicationDTO create(PublicationDTO publicationDTO) {
-        if (publicationDTO.getCreator_id() == null) {
+    public PublicationDetailsDTO create(PublicationCreateDTO publicationCreateDTO) {
+        if (publicationCreateDTO.getCreator_id() == null) {
             throw new IllegalArgumentException("El ID del creador no puede ser nulo");
         }
-        if (publicationDTO.getCategory_id() == null) {
+        if (publicationCreateDTO.getCategory_id() == null) {
             throw new IllegalArgumentException("El ID de la categoría no puede ser nulo");
         }
 
-        Creator creator = creatorRepository.findById(publicationDTO.getCreator_id())
-                .orElseThrow(() -> new RuntimeException("Creator not found with id: " + publicationDTO.getCreator_id()));
-        Category category = categoryRepository.findById(publicationDTO.getCategory_id())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + publicationDTO.getCategory_id()));
+        Creator creator = creatorRepository.findById(publicationCreateDTO.getCreator_id())
+                .orElseThrow(() -> new RuntimeException("Creator not found with id: " + publicationCreateDTO.getCreator_id()));
+        Category category = categoryRepository.findById(publicationCreateDTO.getCategory_id())
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + publicationCreateDTO.getCategory_id()));
 
-        Publication publication = publicationMapper.toEntity(publicationDTO);
-        publication.setTitle(publicationDTO.getTitle());
-        publication.setContent(publicationDTO.getContent());
-        publication.setVideo_url(publicationDTO.getVideo_url());
-        publication.setCoverPath(publicationDTO.getCoverPath());
-        publication.setFilePath(publicationDTO.getFilePath());
+        Publication publication = publicationMapper.toEntity(publicationCreateDTO);
+        publication.setTitle(publicationCreateDTO.getTitle());
+        publication.setContent(publicationCreateDTO.getContent());
+        publication.setVideo_url(publicationCreateDTO.getVideo_url());
+        publication.setFilePath(publicationCreateDTO.getFilePath());
+        publication.setVisibility(publicationCreateDTO.getVisibility());
         publication.setCategory(category);
         publication.setCreator(creator);
         publication.setCreatedAt(LocalDateTime.now());
@@ -76,20 +79,20 @@ public class PublicationServiceImpl implements PublicationService {
                     "Se ha creado una nueva publicación titulada: " + savedPublication.getTitle()
             );
         }
-        return publicationMapper.toDTO(savedPublication);
+        return publicationMapper.toDetailsDTO(savedPublication);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PublicationDTO findById(Integer id) {
+    public PublicationDetailsDTO findById(Integer id) {
         Publication publication = publicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publication not found with id: " + id));
-        return publicationMapper.toDTO(publication);
+        return publicationMapper.toDetailsDTO(publication);
     }
 
     @Transactional
     @Override
-    public PublicationDTO update(Integer id, PublicationDTO updatePublicationDTO) {
+    public PublicationDetailsDTO update(Integer id, PublicationCreateDTO updatePublicationDTO) {
         Publication publicationFromDb = publicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publication not found with id: " + id));
         Category category = categoryRepository.findById(updatePublicationDTO.getCategory_id())
@@ -101,14 +104,14 @@ public class PublicationServiceImpl implements PublicationService {
         publication.setTitle(updatePublicationDTO.getTitle());
         publication.setContent(updatePublicationDTO.getContent());
         publication.setVideo_url(updatePublicationDTO.getVideo_url());
-        publication.setCoverPath(updatePublicationDTO.getCoverPath());
         publication.setFilePath(updatePublicationDTO.getFilePath());
+        publication.setVisibility(updatePublicationDTO.getVisibility());
         publication.setCategory(category);
         publication.setCreator(creator);
         publication.setCreatedAt(LocalDateTime.now());
 
         Publication updatedPublication = publicationRepository.save(publicationFromDb);
-        return publicationMapper.toDTO(updatedPublication);
+        return publicationMapper.toDetailsDTO(updatedPublication);
     }
 
     @Transactional

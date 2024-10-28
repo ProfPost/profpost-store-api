@@ -1,7 +1,6 @@
 package com.Profpost.service.impl;
 
 
-import com.Profpost.dto.PublicationDTO;
 import com.Profpost.integration.notification.email.service.EmailService;
 import com.Profpost.dto.PublicationCreateDTO;
 import com.Profpost.dto.PublicationDetailsDTO;

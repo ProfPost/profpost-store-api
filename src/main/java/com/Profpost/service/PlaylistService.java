@@ -1,7 +1,6 @@
 package com.Profpost.service;
 
 import com.Profpost.dto.PlaylistDTO;
-import com.Profpost.model.entity.Playlist;
 import com.Profpost.model.entity.Publication;
 
 import java.util.List;

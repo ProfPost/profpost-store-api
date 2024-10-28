@@ -1,6 +1,5 @@
 package com.Profpost.dto;
 
-
 import lombok.Data;
 
 @Data

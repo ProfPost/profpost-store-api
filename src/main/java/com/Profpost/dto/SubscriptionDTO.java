@@ -1,10 +1,8 @@
 package com.Profpost.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class SubscriptionDTO {
     private Integer user_id;
     private Integer creator_id;

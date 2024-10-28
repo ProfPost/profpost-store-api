@@ -1,7 +1,6 @@
 package com.Profpost.service;
 
 import com.Profpost.dto.PlanDTO;
-import com.Profpost.model.entity.Plan;
 import java.util.List;
 
 public interface PlanService {

@@ -29,7 +29,7 @@ public class SwaggerAPIConfig {
         //Informacion de contacto
         Contact contact = new Contact();
         contact.setName("Profpost");
-        contact.setUrl("https://github.com/Profpost"); //landingpage
+        contact.setUrl("https://profpost.github.io/profpost-landing-page/"); //landingpage
 
         License mitLicense = new License().name("MIT License").url("https://opensource.org/licenses/MIT");
 

@@ -1,7 +1,6 @@
 package com.Profpost.service;
 
 import com.Profpost.dto.CategoryDTO;
-import com.Profpost.model.entity.Category;
 
 import java.util.List;
 

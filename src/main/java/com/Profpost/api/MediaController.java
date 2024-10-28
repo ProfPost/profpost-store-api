@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,8 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @RequiredArgsConstructor
-@RequestMapping("/media")
 @RestController
+@RequestMapping("/media")
+@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
 public class MediaController {
 
     private final StorageService storageService;

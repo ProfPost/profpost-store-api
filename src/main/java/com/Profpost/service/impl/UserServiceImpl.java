@@ -193,5 +193,4 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundExcept("El usuario con ID"+id+"no fue encontrado"));
         userRepository.delete(user);
     }
-
 }

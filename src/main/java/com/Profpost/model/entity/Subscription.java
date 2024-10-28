@@ -1,4 +1,5 @@
 package com.Profpost.model.entity;
+
 import com.Profpost.model.enums.SubscriptionState;
 import jakarta.persistence.*;
 import lombok.Data;

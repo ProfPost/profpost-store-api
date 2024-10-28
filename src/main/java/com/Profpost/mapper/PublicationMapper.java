@@ -1,11 +1,8 @@
 package com.Profpost.mapper;
 
-import com.Profpost.dto.CommentCreateDTO;
 import com.Profpost.dto.PublicationCreateDTO;
 import com.Profpost.dto.PublicationDetailsDTO;
-import com.Profpost.model.entity.Comment;
 import com.Profpost.model.entity.Publication;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;

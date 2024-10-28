@@ -8,11 +8,11 @@
 		<version>3.3.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.Profpost</groupId>
+	<groupId>com.profpost</groupId>
 	<artifactId>profpost-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>profpost-store-api</name>
-	<description>Demo project for Spring Boot</description>
+	<version>0.0.1</version>
+	<name>profpost-api</name>
+	<description>profpost-api</description>
 	<url/>
 	<licenses>
 		<license/>

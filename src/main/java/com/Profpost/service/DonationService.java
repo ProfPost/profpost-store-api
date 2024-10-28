@@ -2,7 +2,6 @@ package com.Profpost.service;
 
 import com.Profpost.dto.DonationCreateDTO;
 import com.Profpost.dto.DonationDetailsDTO;
-
 import java.util.List;
 
 public interface DonationService {

@@ -2,7 +2,6 @@ package com.Profpost.service;
 
 import com.Profpost.dto.CommentCreateDTO;
 import com.Profpost.dto.CommentDetailsDTO;
-
 import java.util.List;
 
 public interface CommentService {

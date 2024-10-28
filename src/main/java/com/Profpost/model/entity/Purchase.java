@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "pucharse")
-public class Pucharse {
+@Table(name = "purchase")
+public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,7 +22,7 @@ public class Pucharse {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
 
-    @Column(name = "updated_at",nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
     @ManyToOne

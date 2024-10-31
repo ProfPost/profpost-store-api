@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import java.util.List;
 
 // http://localhost:8080/api/v1/swagger-ui/index.html
 @Configuration
@@ -19,6 +20,9 @@ public class SwaggerAPIConfig {
     @Value("${profpost.openapi.dev-url}")
     private String devUrl;
 
+    @Value("${profpost.openapi.prod-url}")
+    private String prodUrl;
+
     @Bean
     public OpenAPI myopenAPI() {
         //Servidor de desarrollo
@@ -26,11 +30,17 @@ public class SwaggerAPIConfig {
         devServer.setUrl(devUrl);
         devServer.setDescription("Server URL in Development environment");
 
+        //Servidor de produccion
+        Server prodServer = new Server();
+        prodServer.setUrl(prodUrl);
+        prodServer.setDescription("Server URL in Production environment");
+
         //Informacion de contacto
         Contact contact = new Contact();
         contact.setName("Profpost");
         contact.setUrl("https://profpost.github.io/profpost-landing-page/"); //landingpage
 
+        //Licencia
         License mitLicense = new License().name("MIT License").url("https://opensource.org/licenses/MIT");
 
         //Informacion general de la API
@@ -57,7 +67,7 @@ public class SwaggerAPIConfig {
 
         return new OpenAPI()
                 .info(info)
-                .addServersItem(devServer)
+                .servers(List.of(devServer, prodServer))
                 .addSecurityItem(securityRequirement)
                 .components(components);
     }

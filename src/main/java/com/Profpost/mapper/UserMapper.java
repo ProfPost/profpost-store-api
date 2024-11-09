@@ -21,7 +21,7 @@ public class UserMapper {
 
     public UserProfileDTO toUserProfileDTO(User user) {
         UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
-
+        userProfileDTO.setRole(user.getRole().getName());
         if (user.getReader() != null) {
             userProfileDTO.setName(user.getReader().getName());
             userProfileDTO.setBiography(user.getReader().getBiography());
@@ -46,7 +46,7 @@ public class UserMapper {
         String name = (user.getReader() != null) ? user.getReader().getName()
                 : (user.getCreator() != null) ? user.getCreator().getName()
                 : "Admin";
-
+        authResponseDTO.setId(user.getId());
         authResponseDTO.setName(name);
         authResponseDTO.setRole(user.getRole().getName().name());
 

@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Usuario no encontrado"));
 
-        // Solo actualizamos el nombre si se ha proporcionado
+        // Actualizar el nombre si está presente y es único
         if (userProfileDTO.getName() != null && !userProfileDTO.getName().isEmpty()) {
             boolean existsAsReader = readerRepository.existsByNameAndUserIdNot(userProfileDTO.getName(), id);
             boolean existsAsCreator = creatorRepository.existsByNameAndUserIdNot(userProfileDTO.getName(), id);
@@ -98,7 +98,17 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        // Actualizamos la biografía si está presente
+        // Actualizar el email si está presente y es único
+        if (userProfileDTO.getEmail() != null && !userProfileDTO.getEmail().isEmpty()) {
+            boolean emailExists = userRepository.existsByEmailAndIdNot(userProfileDTO.getEmail(), id);
+            if (emailExists) {
+                throw new IllegalArgumentException("Ya existe un usuario con el mismo email");
+            }
+
+            user.setEmail(userProfileDTO.getEmail());
+        }
+
+        // Actualizar la biografía si está presente
         if (userProfileDTO.getBiography() != null && !userProfileDTO.getBiography().isEmpty()) {
             if (user.getReader() != null) {
                 user.getReader().setBiography(userProfileDTO.getBiography());
@@ -111,11 +121,12 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        // Guardamos los cambios
+        // Guardar los cambios
         User updatedUser = userRepository.save(user);
 
         return userMapper.toUserProfileDTO(updatedUser);
     }
+
 
     @Transactional(readOnly = true)
     @Override

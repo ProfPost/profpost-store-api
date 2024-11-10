@@ -1,6 +1,5 @@
 package com.Profpost.api;
 
-import com.Profpost.dto.UserProfileDTO;
 import com.Profpost.dto.UserSearchDTO;
 import com.Profpost.service.UserService;
 import lombok.RequiredArgsConstructor;

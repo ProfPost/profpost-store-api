@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserSearchDTO {
+    private Integer id;
     private String name;
     private ERole role;
 }

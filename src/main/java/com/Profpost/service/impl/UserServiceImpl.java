@@ -197,7 +197,8 @@ public class UserServiceImpl implements UserService {
                 .map(user -> {
                     String name = user.getReader() != null ? user.getReader().getName() : user.getCreator().getName();
                     ERole role = (user.getRole().getName());
-                    return new UserSearchDTO(name, role);
+                    Integer id = user.getId();
+                    return new UserSearchDTO(id, name, role);
                 })
                 .collect(Collectors.toList());
     }

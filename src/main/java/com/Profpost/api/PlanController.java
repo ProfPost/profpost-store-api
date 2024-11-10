@@ -19,6 +19,7 @@ import java.util.List;
 public class PlanController {
     private final PlanService planService;
 
+    @PreAuthorize("hasAnyRole('CREATOR', 'READER')")
     @GetMapping
     public ResponseEntity<List<PlanDTO>>listPlan(){
         List<PlanDTO>plans = planService.findAll();

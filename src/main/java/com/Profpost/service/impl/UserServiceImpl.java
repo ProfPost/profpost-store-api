@@ -1,9 +1,6 @@
 package com.Profpost.service.impl;
 
-import com.Profpost.dto.AuthResponseDTO;
-import com.Profpost.dto.LoginDTO;
-import com.Profpost.dto.UserProfileDTO;
-import com.Profpost.dto.UserRegistrationDTO;
+import com.Profpost.dto.*;
 import com.Profpost.exception.ResourceNotFoundExcept;
 import com.Profpost.mapper.UserMapper;
 import com.Profpost.model.entity.Creator;
@@ -29,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -190,11 +188,19 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    @Transactional
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundExcept("Email no encontrado"));
+    public List<UserSearchDTO> searchUsersByName(String userName) {
+        List<User> users = userRepository.findAll();
+
+        return users.stream()
+                .filter(user -> (user.getReader() != null && user.getReader().getName().toLowerCase().contains(userName.toLowerCase())) || (user.getCreator() != null && user.getCreator().getName().toLowerCase().contains(userName.toLowerCase())))
+                .map(user -> {
+                    String name = user.getReader() != null ? user.getReader().getName() : user.getCreator().getName();
+                    ERole role = (user.getRole().getName());
+                    Integer id = user.getId();
+                    return new UserSearchDTO(id, name, role);
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional

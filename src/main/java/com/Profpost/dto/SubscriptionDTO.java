@@ -7,4 +7,5 @@ public class SubscriptionDTO {
     private Integer user_id;
     private Integer creator_id;
     private Integer plan_id;
+    private Integer months;
 }

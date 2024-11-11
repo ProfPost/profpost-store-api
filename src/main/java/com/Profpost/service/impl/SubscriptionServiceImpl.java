@@ -51,9 +51,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Plan plan = planRepository.findById(subscriptionDTO.getPlan_id())
                 .orElseThrow(() -> new RuntimeException("Plan no encontrado"));
 
+        int months = subscriptionDTO.getMonths() != null ? subscriptionDTO.getMonths() : 1;
         Subscription subscription = new Subscription();
         subscription.setStarDate(LocalDateTime.now());
-        subscription.setEndDate(subscription.getStarDate().plusDays(30));
+        subscription.setEndDate(subscription.getStarDate().plusMonths(months));
         subscription.setSubscriptionState(SubscriptionState.NON_SUBSCRIBE);
         subscription.setUser(user);
         subscription.setCreator(creatorUser);
@@ -78,9 +79,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
 
-        subscription.setSubscriptionState(SubscriptionState.NON_SUBSCRIBE);
-
-        subscriptionRepository.save(subscription);
+        if (subscription.getSubscriptionState() != SubscriptionState.SUBSCRIBE) {
+            throw new InvalidOperationException("La suscripción ya está en estado no suscrito o ha expirado.");
+        }
 
         SubscriptionResponseDTO response = new SubscriptionResponseDTO();
         response.setSubscriptionId(subscriptionId);

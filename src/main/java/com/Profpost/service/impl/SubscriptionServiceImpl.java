@@ -43,8 +43,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new InvalidOperationException("Solo puedes suscribirte a creadores");
         }
 
-        Optional<Subscription> existingSubscription = subscriptionRepository.findByUserAndCreator(user, creatorUser);
-        if (existingSubscription.isPresent() && existingSubscription.get().getSubscriptionState() == SubscriptionState.SUBSCRIBE) {
+        Optional<Subscription> existingActiveSubscription = subscriptionRepository
+                .findByUserAndCreatorAndSubscriptionState(user, creatorUser, SubscriptionState.SUBSCRIBE);
+        if (existingActiveSubscription.isPresent()) {
             throw new RuntimeException("Ya estás suscrito a este creador.");
         }
 

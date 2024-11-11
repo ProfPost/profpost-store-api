@@ -22,4 +22,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     List<User> getSubscribersByCreatorId(Integer creatorId);
 
     List<Subscription> findAllByEndDateBeforeAndSubscriptionState(LocalDateTime endDate, SubscriptionState state);
+
+    Optional<Subscription> findByUserAndCreatorAndSubscriptionState(User user, User creator, SubscriptionState subscriptionState);
 }

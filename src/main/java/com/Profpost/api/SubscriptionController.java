@@ -21,12 +21,9 @@ public class SubscriptionController {
 
     @PostMapping
     @PreAuthorize("hasRole('READER')")
-    public ResponseEntity<String> subscribe(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public ResponseEntity<SubscriptionResponseDTO> subscribe(@RequestBody SubscriptionDTO subscriptionDTO) {
         SubscriptionResponseDTO response = subscriptionService.subscribe(subscriptionDTO);
-
-        String plainTextResponse = response.getStatus() + ": " + response.getMessage();
-
-        return ResponseEntity.ok(plainTextResponse);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{subscriptionId}")

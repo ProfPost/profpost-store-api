@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/category")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
 
 public class CategoryController {
     private final CategoryService categoryService;

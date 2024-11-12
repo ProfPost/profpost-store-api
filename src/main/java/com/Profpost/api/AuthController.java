@@ -1,18 +1,14 @@
 package com.Profpost.api;
 
-import com.Profpost.dto.AuthResponseDTO;
-import com.Profpost.dto.LoginDTO;
-import com.Profpost.dto.UserProfileDTO;
-import com.Profpost.dto.UserRegistrationDTO;
+import com.Profpost.dto.*;
+import com.Profpost.service.CreatorService;
 import com.Profpost.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.Profpost.dto.UserIdRequestDTO;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class AuthController {
     private final UserService userService;
+    private final CreatorService creatorService;
 
     // Endpoint para registrar lector
     @PostMapping("/register/reader")
@@ -40,4 +37,11 @@ public class AuthController {
         AuthResponseDTO authResponse = userService.login(loginDTO);
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/creator-id")
+    public ResponseEntity<Integer> getCreatorId(@RequestParam Integer userId) {
+        Integer creatorId = creatorService.findCreatorIdByUserId(userId);
+        return ResponseEntity.ok(creatorId);
+    }
+
 }

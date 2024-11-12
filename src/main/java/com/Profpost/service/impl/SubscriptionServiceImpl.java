@@ -104,4 +104,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 ).toList();
         return subscriptionReportDTOS;
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isUserSubscribedToCreator(Integer userId, Integer creatorId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + userId));
+
+        User creator = userRepository.findById(creatorId)
+                .orElseThrow(() -> new RuntimeException("Creador no encontrado con id: " + creatorId));
+
+        Optional<Subscription> existingSubscription = subscriptionRepository
+                .findByUserAndCreatorAndSubscriptionState(user, creator, SubscriptionState.SUBSCRIBE);
+
+        return existingSubscription.isPresent();
+
+    }
+
 }

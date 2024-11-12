@@ -38,4 +38,10 @@ public class SubscriptionController {
         List<SubscriptionReportDTO> reports = subscriptionService.getSubscriptionReportByDate();
         return ResponseEntity.ok(reports);
     }
+    @GetMapping("/is-subscribed")
+    @PreAuthorize("hasRole('READER')")
+    public ResponseEntity<Boolean> isUserSubscribedToCreator(@RequestParam Integer userId, @RequestParam Integer creatorId) {
+        boolean isSubscribed = subscriptionService.isUserSubscribedToCreator(userId, creatorId);
+        return ResponseEntity.ok(isSubscribed);
+    }
 }

@@ -43,17 +43,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new InvalidOperationException("Solo puedes suscribirte a creadores");
         }
 
-        Optional<Subscription> existingSubscription = subscriptionRepository.findByUserAndCreator(user, creatorUser);
-        if (existingSubscription.isPresent() && existingSubscription.get().getSubscriptionState() == SubscriptionState.SUBSCRIBE) {
+        Optional<Subscription> existingActiveSubscription = subscriptionRepository
+                .findByUserAndCreatorAndSubscriptionState(user, creatorUser, SubscriptionState.SUBSCRIBE);
+        if (existingActiveSubscription.isPresent()) {
             throw new RuntimeException("Ya estás suscrito a este creador.");
         }
 
         Plan plan = planRepository.findById(subscriptionDTO.getPlan_id())
                 .orElseThrow(() -> new RuntimeException("Plan no encontrado"));
 
+        int months = subscriptionDTO.getMonths() != null ? subscriptionDTO.getMonths() : 1;
         Subscription subscription = new Subscription();
         subscription.setStarDate(LocalDateTime.now());
-        subscription.setEndDate(subscription.getStarDate().plusDays(30));
+        subscription.setEndDate(subscription.getStarDate().plusMonths(months));
         subscription.setSubscriptionState(SubscriptionState.NON_SUBSCRIBE);
         subscription.setUser(user);
         subscription.setCreator(creatorUser);
@@ -78,9 +80,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
 
-        subscription.setSubscriptionState(SubscriptionState.NON_SUBSCRIBE);
-
-        subscriptionRepository.save(subscription);
+        if (subscription.getSubscriptionState() != SubscriptionState.SUBSCRIBE) {
+            throw new InvalidOperationException("La suscripción ya está en estado no suscrito o ha expirado.");
+        }
 
         SubscriptionResponseDTO response = new SubscriptionResponseDTO();
         response.setSubscriptionId(subscriptionId);
@@ -102,4 +104,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 ).toList();
         return subscriptionReportDTOS;
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isUserSubscribedToCreator(Integer userId, Integer creatorId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + userId));
+
+        User creator = userRepository.findById(creatorId)
+                .orElseThrow(() -> new RuntimeException("Creador no encontrado con id: " + creatorId));
+
+        Optional<Subscription> existingSubscription = subscriptionRepository
+                .findByUserAndCreatorAndSubscriptionState(user, creator, SubscriptionState.SUBSCRIBE);
+
+        return existingSubscription.isPresent();
+
+    }
+
 }

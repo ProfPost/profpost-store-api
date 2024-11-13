@@ -10,4 +10,5 @@ public interface SubscriptionService {
     SubscriptionResponseDTO subscribe(SubscriptionDTO subscriptionDTO);
     SubscriptionResponseDTO unsubscribe(Integer subscriptionId);
     List<SubscriptionReportDTO> getSubscriptionReportByDate();
+    boolean isUserSubscribedToCreator(Integer userId, Integer creatorId);
 }

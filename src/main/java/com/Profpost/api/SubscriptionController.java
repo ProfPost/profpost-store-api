@@ -21,12 +21,9 @@ public class SubscriptionController {
 
     @PostMapping
     @PreAuthorize("hasRole('READER')")
-    public ResponseEntity<String> subscribe(@RequestBody SubscriptionDTO subscriptionDTO) {
+    public ResponseEntity<SubscriptionResponseDTO> subscribe(@RequestBody SubscriptionDTO subscriptionDTO) {
         SubscriptionResponseDTO response = subscriptionService.subscribe(subscriptionDTO);
-
-        String plainTextResponse = response.getStatus() + ": " + response.getMessage();
-
-        return ResponseEntity.ok(plainTextResponse);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{subscriptionId}")
@@ -40,5 +37,11 @@ public class SubscriptionController {
     public ResponseEntity<List<SubscriptionReportDTO>> getSubscriptionReport() {
         List<SubscriptionReportDTO> reports = subscriptionService.getSubscriptionReportByDate();
         return ResponseEntity.ok(reports);
+    }
+    @GetMapping("/is-subscribed")
+    @PreAuthorize("hasRole('READER')")
+    public ResponseEntity<Boolean> isUserSubscribedToCreator(@RequestParam Integer userId, @RequestParam Integer creatorId) {
+        boolean isSubscribed = subscriptionService.isUserSubscribedToCreator(userId, creatorId);
+        return ResponseEntity.ok(isSubscribed);
     }
 }

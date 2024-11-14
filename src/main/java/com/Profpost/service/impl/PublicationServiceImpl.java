@@ -92,24 +92,32 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     @Override
     public PublicationDetailsDTO update(Integer id, PublicationCreateDTO updatePublicationDTO) {
+        // Buscar la publicación en la base de datos
         Publication publicationFromDb = publicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publication not found with id: " + id));
+
+        // Buscar y asignar la categoría
         Category category = categoryRepository.findById(updatePublicationDTO.getCategory_id())
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + updatePublicationDTO.getCategory_id()));
+
+        // Buscar y asignar el creador
         Creator creator = creatorRepository.findById(updatePublicationDTO.getCreator_id())
                 .orElseThrow(() -> new RuntimeException("Creator not found with id: " + updatePublicationDTO.getCreator_id()));
 
-        Publication publication = publicationMapper.toEntity(updatePublicationDTO);
-        publication.setTitle(updatePublicationDTO.getTitle());
-        publication.setContent(updatePublicationDTO.getContent());
-        publication.setVideo_url(updatePublicationDTO.getVideo_url());
-        publication.setFilePath(updatePublicationDTO.getFilePath());
-        publication.setVisibility(updatePublicationDTO.getVisibility());
-        publication.setCategory(category);
-        publication.setCreator(creator);
-        publication.setCreatedAt(LocalDateTime.now());
+        // Actualizar otros campos de la publicación
+        publicationFromDb.setTitle(updatePublicationDTO.getTitle());
+        publicationFromDb.setContent(updatePublicationDTO.getContent());
+        publicationFromDb.setVideo_url(updatePublicationDTO.getVideo_url());
+        publicationFromDb.setFilePath(updatePublicationDTO.getFilePath());
+        publicationFromDb.setVisibility(updatePublicationDTO.getVisibility());
+        publicationFromDb.setCategory(category);
+        publicationFromDb.setCreator(creator);
+        publicationFromDb.setCreatedAt(LocalDateTime.now());
 
+        // Guardar la publicación actualizada en la base de datos
         Publication updatedPublication = publicationRepository.save(publicationFromDb);
+
+        // Convertir a DTO y devolver la respuesta
         return publicationMapper.toDetailsDTO(updatedPublication);
     }
 

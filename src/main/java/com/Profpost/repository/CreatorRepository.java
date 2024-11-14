@@ -14,4 +14,6 @@ public interface CreatorRepository extends JpaRepository<Creator, Integer> {
 
     //Metodo para verificar si ya existe un creador con el mismo nombre y apellido, excepto el usuario actual
     boolean existsByNameAndUserIdNot(String name, Integer userId);
+
+    Creator findByUserId(Integer userId);
 }

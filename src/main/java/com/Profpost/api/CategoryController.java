@@ -18,6 +18,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @PreAuthorize("hasRole('CREATOR')")
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories(){
         return ResponseEntity.ok(categoryService.getAll());

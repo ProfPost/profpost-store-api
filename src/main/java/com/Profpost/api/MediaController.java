@@ -16,7 +16,6 @@ import java.nio.file.Files;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/media")
-@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
 public class MediaController {
 
     private final StorageService storageService;

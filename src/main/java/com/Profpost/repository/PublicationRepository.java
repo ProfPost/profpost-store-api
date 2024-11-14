@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, Integer> {
     List<Publication> findAllByIsPublishedFalseAndSchedulePublishAtBefore(LocalDateTime now);
+
+    List<Publication> findTop5ByOrderByCreatedAtDesc();
 }

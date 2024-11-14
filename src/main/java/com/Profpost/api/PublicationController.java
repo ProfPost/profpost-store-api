@@ -50,4 +50,10 @@ public class PublicationController {
         publicationService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/by-creator")
+    public ResponseEntity<List<PublicationDetailsDTO>> getPublicationsByCreator(@RequestParam Integer creatorId) {
+        List<PublicationDetailsDTO> publications = publicationService.findByCreatorId(creatorId);
+        return ResponseEntity.ok(publications);
+    }
 }

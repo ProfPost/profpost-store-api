@@ -12,4 +12,5 @@ public interface PublicationRepository extends JpaRepository<Publication, Intege
     List<Publication> findAllByIsPublishedFalseAndSchedulePublishAtBefore(LocalDateTime now);
 
     List<Publication> findTop5ByOrderByCreatedAtDesc();
+    List<Publication> findByCreatorId(Integer creatorId);
 }

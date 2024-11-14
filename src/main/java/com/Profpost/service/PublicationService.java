@@ -11,4 +11,6 @@ public interface PublicationService {
     PublicationDetailsDTO findById(Integer id);
     PublicationDetailsDTO update(Integer id, PublicationCreateDTO updatePublicationDTO);
     void delete(Integer id);
+
+    List<PublicationDetailsDTO> findTop5PublicationsByCreatedAt();
 }

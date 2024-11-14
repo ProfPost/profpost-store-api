@@ -128,4 +128,12 @@ public class PublicationServiceImpl implements PublicationService {
                 .orElseThrow(() -> new RuntimeException("Publication not found with id: " + id));
         publicationRepository.delete(publication);
     }
+
+    @Override
+    public List<PublicationDetailsDTO> findTop5PublicationsByCreatedAt(){
+        return publicationRepository.findTop5ByOrderByCreatedAtDesc()
+                .stream()
+                .map(publicationMapper::toDetailsDTO)
+                .toList();
+    }
 }

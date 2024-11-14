@@ -13,11 +13,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/category")
-@PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
+@PreAuthorize("hasRole('ADMIN')")
 
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @PreAuthorize("hasRole('CREATOR')")
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories(){
         return ResponseEntity.ok(categoryService.getAll());

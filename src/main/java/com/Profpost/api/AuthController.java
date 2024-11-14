@@ -38,10 +38,4 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/creator-id")
-    public ResponseEntity<Integer> getCreatorId(@RequestParam Integer userId) {
-        Integer creatorId = creatorService.findCreatorIdByUserId(userId);
-        return ResponseEntity.ok(creatorId);
-    }
-
 }

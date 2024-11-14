@@ -40,7 +40,9 @@ public class PurchaseServiceImpl implements PurchaseService {
             Subscription subscription = subscriptionRepository.findById(purchaseDTO.getSubscription_id()).orElseThrow(() -> new RuntimeException("Subscription Not Found"));
             purchase.setSubscription(subscription);
 
-            purchase.setTotal(subscription.getPlan().getPrice());
+            int months = purchaseDTO.getMonths() != null ? purchaseDTO.getMonths() : 1;
+            float total = subscription.getPlan().getPrice() * months;
+            purchase.setTotal(total);
         }
 
         if(purchaseDTO.getDonation_id() != null) {

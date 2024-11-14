@@ -13,4 +13,5 @@ public interface PublicationService {
     void delete(Integer id);
 
     List<PublicationDetailsDTO> findTop5PublicationsByCreatedAt();
+    List<PublicationDetailsDTO> findByCreatorId(Integer id);
 }

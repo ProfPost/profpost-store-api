@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -135,5 +136,13 @@ public class PublicationServiceImpl implements PublicationService {
                 .stream()
                 .map(publicationMapper::toDetailsDTO)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PublicationDetailsDTO> findByCreatorId(Integer creatorId) {
+        List<Publication> publications = publicationRepository.findByCreatorId(creatorId);
+        return publications.stream()
+                .map(publicationMapper::toDetailsDTO)
+                .collect(Collectors.toList());
     }
 }

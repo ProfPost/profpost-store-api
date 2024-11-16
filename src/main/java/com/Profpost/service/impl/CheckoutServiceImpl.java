@@ -70,7 +70,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         Map<String, Object> model = new HashMap<>();
         model.put("user", email);
         model.put("total", purchaseDTO.getTotal());
-        model.put("orderUrl", "https://profpost-web-v1.netlify.app/order/" + purchaseDTO.getId());
+        //model.put("orderUrl", "https://profpost-web-v1.netlify.app/order/" + purchaseDTO.getId());
+        model.put("orderUrl", "http://localhost:4200/order/" + purchaseDTO.getId());
 
         Mail mail = emailService.createMail(
                 email,

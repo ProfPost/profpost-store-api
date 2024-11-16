@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SubscriptionExpirationService {
+public class SubscriptionExpirationScheduler {
     private final SubscriptionRepository subscriptionRepository;
 
     @Scheduled(cron = "0 0 0 * * ?")

@@ -13,8 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {
-    Optional<Subscription> findByUserAndCreator(User user, User creator);
-
     @Query(value = "SELECT * FROM fn_list_subscription_report()", nativeQuery = true)
     List<Object[]> getSubscriptionReportByDate();
 
@@ -22,6 +20,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     List<User> getSubscribersByCreatorId(Integer creatorId);
 
     List<Subscription> findAllByEndDateBeforeAndSubscriptionState(LocalDateTime endDate, SubscriptionState state);
-
     Optional<Subscription> findByUserAndCreatorAndSubscriptionState(User user, User creator, SubscriptionState subscriptionState);
+    List<Subscription> findAllByUserIdAndSubscriptionState(Integer userId, SubscriptionState state);
 }

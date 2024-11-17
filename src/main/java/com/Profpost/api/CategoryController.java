@@ -1,11 +1,11 @@
 package com.Profpost.api;
 
 import com.Profpost.dto.CategoryDTO;
-import com.Profpost.model.entity.Category;
 import com.Profpost.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.util.List;
@@ -13,9 +13,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/category")
+@PreAuthorize("hasRole('ADMIN')")
+
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @PreAuthorize("hasRole('CREATOR')")
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories(){
         return ResponseEntity.ok(categoryService.getAll());

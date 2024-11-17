@@ -1,5 +1,7 @@
 package com.Profpost.model.entity;
+
 import com.Profpost.model.enums.SubscriptionState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -25,10 +27,15 @@ public class Subscription {
     private SubscriptionState subscriptionState;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_subscription_user"))
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "creator_id")
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_subscription_creator"))
+    @JsonIgnore
     private User creator;
+
+    @ManyToOne
+    @JoinColumn(name = "plan_id", nullable = false)
+    private Plan plan;
 }

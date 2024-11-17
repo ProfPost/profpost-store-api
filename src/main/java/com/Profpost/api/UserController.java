@@ -1,10 +1,11 @@
 package com.Profpost.api;
 
-import com.Profpost.model.entity.User;
+import com.Profpost.dto.UserProfileDTO;
 import com.Profpost.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,22 +13,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> listUser(){
-        return ResponseEntity.ok(userService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public User get(@PathVariable Integer id) {
-        return userService.findById(id);
-    }
-
-    @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @RequestBody User user) {
-        return userService.update(id, user);
+    public ResponseEntity<List<UserProfileDTO>> getAllProfiles() {
+        List<UserProfileDTO> profiles = userService.findAll();
+        return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

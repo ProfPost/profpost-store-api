@@ -7,15 +7,12 @@ import com.Profpost.mapper.CategoryMapper;
 import com.Profpost.model.entity.Category;
 import com.Profpost.repository.CategoryRepository;
 import com.Profpost.service.CategoryService;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service

@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomErrorResponse {
-    private LocalDateTime DateTime;
-    private String Message;
-    private String Details;
+  
+  private LocalDateTime dateTime;
+  private String message;
+  private String details;
 }

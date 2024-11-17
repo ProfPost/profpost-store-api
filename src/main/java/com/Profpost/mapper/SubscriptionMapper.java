@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class SubscriptionMapper {
     public ActiveSubscriptionDTO toDTO(Subscription subscription) {
         ActiveSubscriptionDTO dto = new ActiveSubscriptionDTO();
+        dto.setId(subscription.getId());
         dto.setCreatorName(subscription.getCreator().getCreator().getName());
         dto.setStartDate(subscription.getStarDate());
         dto.setEndDate(subscription.getEndDate());

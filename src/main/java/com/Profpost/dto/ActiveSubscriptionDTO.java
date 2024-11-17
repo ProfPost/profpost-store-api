@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ActiveSubscriptionDTO {
+    private Integer id;
     private String creatorName;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

@@ -1,5 +1,6 @@
 package com.Profpost.repository;
 
+import com.Profpost.model.entity.Creator;
 import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.User;
 import com.Profpost.model.enums.SubscriptionState;
@@ -16,10 +17,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
     @Query(value = "SELECT * FROM fn_list_subscription_report()", nativeQuery = true)
     List<Object[]> getSubscriptionReportByDate();
 
-    @Query("SELECT s.user FROM Subscription s WHERE s.creator.id = :creatorId AND s.subscriptionState = 'SUBSCRIBE'")
-    List<User> getSubscribersByCreatorId(Integer creatorId);
-
     List<Subscription> findAllByEndDateBeforeAndSubscriptionState(LocalDateTime endDate, SubscriptionState state);
     Optional<Subscription> findByUserAndCreatorAndSubscriptionState(User user, User creator, SubscriptionState subscriptionState);
+    List<Subscription> findByCreatorAndSubscriptionState(Creator creator, SubscriptionState subscriptionState);
     List<Subscription> findAllByUserIdAndSubscriptionState(Integer userId, SubscriptionState state);
 }

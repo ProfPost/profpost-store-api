@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Publicación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e5e8d8;
+            color: #323f59;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        header, footer {
+            background-color: #087443;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 8px 8px 0 0;
+        }
+        footer {
+            border-radius: 0 0 8px 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #999999;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #323F59;
+            color: #ffffff;
+        }
+        a.button {
+            display: inline-block;
+            background-color: #087443;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+        a.button:hover {
+            background-color: #262626;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Nueva Publicación</h1>
+    </header>
+
+    <p>Hola <span th:text="${user}">Usuario</span>,</p>
+    <p>El creador <strong th:text="${creatorName}">Nombre del Creador</strong> ha publicado algo nuevo que podría interesarte:</p>
+
+    <table>
+        <tr>
+            <th>Detalles</th>
+        </tr>
+        <tr>
+            <td>
+                <p><strong>Título:</strong> <span th:text="${publicationTitle}">Título de la Publicación</span></p>
+                <p><strong>Descripción:</strong> <span th:text="${publicationContent}">Descripción de la publicación</span></p>
+            </td>
+        </tr>
+    </table>
+
+    <p>Haz clic en el siguiente enlace para ver la publicación completa:</p>
+    <div style="text-align: center;">
+        <a th:href="${publicationUrl}" class="button">Ver Publicación</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 ProfPost. Todos los derechos reservados.</p>
+    </footer>
+</div>
+</body>
+</html>

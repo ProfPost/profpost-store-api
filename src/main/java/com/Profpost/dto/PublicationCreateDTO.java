@@ -34,5 +34,7 @@ public class PublicationCreateDTO {
     @NotNull(message = "El ID del creador es obligatorio")
     private Integer creator_id;
 
+    private Integer userId;
+
     private LocalDateTime schedulePublishAt;
 }

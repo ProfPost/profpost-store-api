@@ -1,22 +1,24 @@
 package com.Profpost.service.impl;
 
-
+import com.Profpost.integration.notification.email.dto.Mail;
 import com.Profpost.integration.notification.email.service.EmailService;
 import com.Profpost.dto.PublicationCreateDTO;
 import com.Profpost.dto.PublicationDetailsDTO;
 import com.Profpost.mapper.PublicationMapper;
-import com.Profpost.model.entity.Category;
-import com.Profpost.model.entity.Creator;
-import com.Profpost.model.entity.Publication;
-import com.Profpost.model.entity.User;
+import com.Profpost.model.entity.*;
+import com.Profpost.model.enums.SubscriptionState;
 import com.Profpost.repository.*;
 import com.Profpost.service.PublicationService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,9 +27,12 @@ public class PublicationServiceImpl implements PublicationService {
     private final PublicationRepository publicationRepository;
     private final CreatorRepository creatorRepository;
     private final CategoryRepository categoryRepository;
-    private final SubscriptionRepository subscriptionRepository;
     private final EmailService emailService;
     private final PublicationMapper publicationMapper;
+    private final UserRepository userRepository;
+
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
     @Transactional(readOnly = true)
     @Override
@@ -40,7 +45,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Transactional
     @Override
-    public PublicationDetailsDTO create(PublicationCreateDTO publicationCreateDTO) {
+    public PublicationDetailsDTO create(PublicationCreateDTO publicationCreateDTO) throws MessagingException {
         if (publicationCreateDTO.getCreator_id() == null) {
             throw new IllegalArgumentException("El ID del creador no puede ser nulo");
         }
@@ -48,10 +53,13 @@ public class PublicationServiceImpl implements PublicationService {
             throw new IllegalArgumentException("El ID de la categoría no puede ser nulo");
         }
 
-        Creator creator = creatorRepository.findById(publicationCreateDTO.getCreator_id())
-                .orElseThrow(() -> new RuntimeException("Creator not found with id: " + publicationCreateDTO.getCreator_id()));
         Category category = categoryRepository.findById(publicationCreateDTO.getCategory_id())
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + publicationCreateDTO.getCategory_id()));
+
+        User user = userRepository.findById(publicationCreateDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + publicationCreateDTO.getUserId()));
+        Creator creator = creatorRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Creador no encontrado con el userId proporcionado"));
 
         Publication publication = publicationMapper.toEntity(publicationCreateDTO);
         publication.setTitle(publicationCreateDTO.getTitle());
@@ -71,13 +79,27 @@ public class PublicationServiceImpl implements PublicationService {
 
         Publication savedPublication = publicationRepository.save(publication);
 
-        List<User> subscribers = subscriptionRepository.getSubscribersByCreatorId(creator.getId());
-        for (User subscriber : subscribers) {
-            emailService.sendNotification(
-                    subscriber.getEmail(),
-                    "Nueva publicación de " + creator.getName(),
-                    "Se ha creado una nueva publicación titulada: " + savedPublication.getTitle()
+        List<Reader> subscribers = publicationRepository.findReadersByCreatorIdAndSubscriptionState(
+                user.getId(), SubscriptionState.SUBSCRIBE);
+        for (Reader subscriber : subscribers) {
+            String email = subscriber.getUser().getEmail();
+
+            Map<String, Object> model = new HashMap<>();
+            String publicationUrl = "http://localhost:4200/creator/publications-catalog";
+            model.put("creatorName", creator.getName());
+            model.put("publicationTitle", savedPublication.getTitle());
+            model.put("publicationContent", savedPublication.getContent());
+            model.put("publicationDate", savedPublication.getCreatedAt().toString());
+            model.put("publicationUrl", publicationUrl);
+            model.put("user", subscriber.getName());
+
+            Mail mail = emailService.createMail(
+                    email,
+                    "Nueva publicación",
+                    model,
+                    mailFrom
             );
+            emailService.sendMail(mail, "email/publication-template");
         }
         return publicationMapper.toDetailsDTO(savedPublication);
     }

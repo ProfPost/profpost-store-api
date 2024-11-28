@@ -1,5 +1,6 @@
 package com.Profpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import jakarta.persistence.*;
@@ -19,9 +20,11 @@ public class User {
     private String password;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Reader reader;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Creator creator;
 
     @ManyToOne(fetch = FetchType.EAGER)

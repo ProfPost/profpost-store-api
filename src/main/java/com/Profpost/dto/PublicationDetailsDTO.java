@@ -14,6 +14,5 @@ public class PublicationDetailsDTO {
     private String visibility;
     private String categoryname;
     private String creatorname;
-
     private LocalDateTime schedulePublishAt;
 }

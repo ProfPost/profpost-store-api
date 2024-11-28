@@ -4,6 +4,7 @@ import com.Profpost.integration.notification.email.dto.Mail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,14 +21,6 @@ public class EmailService {
     private final SpringTemplateEngine templateEngine;
     @Autowired
     private JavaMailSender mailSender;
-
-    public void sendNotification(String toEmail, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(body);
-        mailSender.send(message);
-    }
 
     public Mail createMail(String to, String subject, Map<String, Object> model, String from) {
         Mail mail = new Mail();

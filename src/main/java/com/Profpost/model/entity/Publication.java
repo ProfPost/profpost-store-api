@@ -1,6 +1,8 @@
 package com.Profpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,7 +11,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "publications")
-
 public class Publication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +49,7 @@ public class Publication {
 
     @ManyToOne
     @JoinColumn(name = "creator_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_publication_creator"))
+    @JsonIgnore
     private Creator creator;
 
     @JsonIgnore

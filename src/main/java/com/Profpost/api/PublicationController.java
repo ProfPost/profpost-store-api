@@ -3,6 +3,7 @@ package com.Profpost.api;
 import com.Profpost.dto.PublicationCreateDTO;
 import com.Profpost.dto.PublicationDetailsDTO;
 import com.Profpost.service.PublicationService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class PublicationController {
     }
 
     @PostMapping("/creators")
-    public ResponseEntity<PublicationDetailsDTO> create(@Valid @RequestBody PublicationCreateDTO publicationCreateDTO) {
+    public ResponseEntity<PublicationDetailsDTO> create(@Valid @RequestBody PublicationCreateDTO publicationCreateDTO) throws MessagingException {
         PublicationDetailsDTO createdPublication = publicationService.create(publicationCreateDTO);
         return new ResponseEntity<>(createdPublication, HttpStatus.CREATED);
     }

@@ -1,5 +1,6 @@
 package com.Profpost.api;
 
+import com.Profpost.dto.ActiveSubscriptionDTO;
 import com.Profpost.dto.SubscriptionDTO;
 import com.Profpost.dto.SubscriptionReportDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
@@ -15,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/subscription")
 @PreAuthorize("hasAnyRole('ADMIN', 'CREATOR')")
-
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
@@ -38,10 +38,19 @@ public class SubscriptionController {
         List<SubscriptionReportDTO> reports = subscriptionService.getSubscriptionReportByDate();
         return ResponseEntity.ok(reports);
     }
+
     @GetMapping("/is-subscribed")
     @PreAuthorize("hasRole('READER')")
     public ResponseEntity<Boolean> isUserSubscribedToCreator(@RequestParam Integer userId, @RequestParam Integer creatorId) {
         boolean isSubscribed = subscriptionService.isUserSubscribedToCreator(userId, creatorId);
         return ResponseEntity.ok(isSubscribed);
+    }
+
+    @GetMapping("/active")
+    @PreAuthorize("hasRole('READER')")
+    public ResponseEntity<List<ActiveSubscriptionDTO>> getActiveSubscriptionsByUserId(@RequestParam Integer userId) {
+        List<ActiveSubscriptionDTO> subscriptions = subscriptionService.getActiveSubscriptionByUserId(userId);
+
+        return ResponseEntity.ok(subscriptions);
     }
 }

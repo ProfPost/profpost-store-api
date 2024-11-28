@@ -26,4 +26,8 @@ public class Playlist {
     @JsonIgnore
     @OneToMany(mappedBy = "playlist")
     private List<Publication> publications;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

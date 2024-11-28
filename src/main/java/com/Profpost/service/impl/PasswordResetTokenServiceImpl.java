@@ -43,7 +43,8 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         passwordResetTokenRepository.save(passwordResetToken);
 
         Map<String, Object> model = new HashMap<>();
-        String resetUrl = "https://profpost-web-v1.netlify.app/auth/forgot/" + passwordResetToken.getToken();
+        //String resetUrl = "https://profpost-web-v1.netlify.app/auth/forgot/" + passwordResetToken.getToken();
+        String resetUrl = "http://localhost:4200/auth/forgot/" + passwordResetToken.getToken();
         model.put("user", user.getEmail());
         model.put("resetUrl", resetUrl);
 

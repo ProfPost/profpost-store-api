@@ -1,9 +1,11 @@
 package com.Profpost.service.impl;
 
+import com.Profpost.dto.ActiveSubscriptionDTO;
 import com.Profpost.dto.SubscriptionDTO;
 import com.Profpost.dto.SubscriptionReportDTO;
 import com.Profpost.dto.SubscriptionResponseDTO;
 import com.Profpost.exception.InvalidOperationException;
+import com.Profpost.mapper.SubscriptionMapper;
 import com.Profpost.model.entity.Plan;
 import com.Profpost.model.entity.Subscription;
 import com.Profpost.model.entity.User;
@@ -21,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
-
+    private final SubscriptionMapper subscriptionMapper;
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
     private final PlanRepository planRepository;
@@ -105,6 +107,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionReportDTOS;
     }
 
+    @Transactional
+    @Override
+    public List<ActiveSubscriptionDTO> getActiveSubscriptionByUserId(Integer userId) {
+        return subscriptionRepository
+                .findAllByUserIdAndSubscriptionState(userId, SubscriptionState.SUBSCRIBE)
+                .stream()
+                .map(subscriptionMapper::toDTO)
+                .toList();
+    }
+
     @Transactional(readOnly = true)
     @Override
     public boolean isUserSubscribedToCreator(Integer userId, Integer creatorId) {
@@ -120,5 +132,4 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return existingSubscription.isPresent();
 
     }
-
 }

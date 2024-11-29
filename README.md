@@ -69,12 +69,12 @@ Para entender mejor la estructura y diseño de la aplicación "BookHub", revisa 
 
 ### Diagrama de Clases
 
-![Diagrama de clases](https://github.com/user-attachments/assets/dc35b74d-9fbe-4ede-ac95-1ee62e08e111)
+![Diagrama de clases](https://github.com/user-attachments/assets/3cd5d80b-6b8c-4dcb-9154-5f99ad87ec53)
 
 
 ### Diagrama de Base de Datos
 
-![Diagrama de Base de Datos](https://github.com/user-attachments/assets/a5cfec33-7f51-4ba9-b1a3-d7759190643e)
+![Diagrama de Base de Datos](https://github.com/user-attachments/assets/692cde35-af6b-4bd2-b469-c51d946b58ff)
 
 Este diagrama ilustra el esquema de la base de datos utilizada por la aplicación, mostrando las tablas, columnas, y relaciones entre las entidades.
 
@@ -82,11 +82,13 @@ Este diagrama ilustra el esquema de la base de datos utilizada por la aplicació
 
 | Capa        | Descripción                                                                                  |
 |:------------:|----------------------------------------------------------------------------------------------|
-| api         | Contiene los controladores REST que manejan las solicitudes HTTP y las respuestas.            |
-| config      | Gestiona la configuración general del proyecto.      |
-| dto      | Define los objetos de transferencia de datos, representan la estructura de cómo se enviarán los datos en formato JSON en un request y cómo se recibirán en la respuesta.|
-| mapper      | Mapea y convierte las entidades entre DTOs y entidades del modelo de datos.      |
-| entity      | Define las entidades del modelo de datos que se mapean a las tablas de la base de datos.      |
-| repository  | Proporciona la interfaz para las operaciones y la interacción con la base de datos.      |
-| service     | Declara la lógica de negocio y las operaciones que se realizarán sobre las entidades.         |
-| service impl| Implementa la lógica de negocio definida en los servicios, utilizando los repositorios necesarios. |
+| api         | Controladores REST que gestionan las solicitudes y respuestas de la API.|
+| config      | Configuraciones de la aplicación, incluyendo Schedulers.|
+| dto      | Data Transfer Objects para la transferencia de datos entre frontend y backend.|
+| model      | Enumeraciones utilizadas en la aplicación.|
+| entity      | Entidades mapeadas a tablas de la base de datos.|
+| enums      | Enumeraciones utilizadas en la aplicación para roles y estados.|
+| repository  | Repositorios para la gestión de la persistencia de datos.|
+| scheduler  | Tareas programadas para la publicación automática de contenido.|
+| service     | Interfaces de servicios que contienen la lógica de negocio.|
+| impl| Implementaciones de servicios que interactúan con los repositorios. |

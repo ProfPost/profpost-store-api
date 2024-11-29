@@ -3,6 +3,8 @@ package com.Profpost.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "reaction")
@@ -15,7 +17,11 @@ public class Reaction {
     @Column(name = "value", nullable = false)
     private Integer value;
 
-    @ManyToOne
-    @JoinColumn(name = "video_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_reaction_video"))
-    private Video video;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publication_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_reaction_publication"))
+    private Publication publication;
 }

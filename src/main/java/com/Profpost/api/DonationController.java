@@ -29,6 +29,7 @@ public class DonationController {
     }
 
     @GetMapping("/donors/{creatorId}")
+    @PreAuthorize("hasRole('READER')")
     public ResponseEntity<List<DonationDetailsDTO>> getDonorsAndAmounts(@PathVariable Integer creatorId) {
         List<DonationDetailsDTO> donations = donationService.getDonorsAndAmounts(creatorId);
         if (donations.isEmpty()) {

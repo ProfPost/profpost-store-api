@@ -1,6 +1,6 @@
 package com.Profpost.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "created_at", nullable = false)
@@ -23,8 +23,13 @@ public class Playlist {
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "playlist")
+    @JsonManagedReference
+    @ManyToMany
+    @JoinTable(
+            name = "playlist_publication", // Tabla intermedia
+            joinColumns = @JoinColumn(name = "playlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "publication_id")
+    )
     private List<Publication> publications;
 
     @ManyToOne(fetch = FetchType.LAZY)

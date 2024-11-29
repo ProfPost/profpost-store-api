@@ -1,6 +1,7 @@
 package com.Profpost.service.impl;
 
 import com.Profpost.dto.PlaylistDTO;
+import com.Profpost.dto.PublicationInPlaylistDTO;
 import com.Profpost.exception.BadRequestException;
 import com.Profpost.exception.ResourceNotFoundExcept;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -127,10 +129,22 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Transactional
     @Override
-    public List<Publication> getPublicationByPlaylistId(Integer playlistId) {
+    public List<PublicationInPlaylistDTO> getPublicationsForPlaylist(Integer playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Playlist no encontrada"));
-        return playlist.getPublications();
+
+        List<PublicationInPlaylistDTO> publications = playlist.getPublications().stream()
+                .map(pub -> {
+                    PublicationInPlaylistDTO dto = new PublicationInPlaylistDTO();
+                    dto.setId(pub.getId());
+                    dto.setTitle(pub.getTitle());
+                    dto.setContent(pub.getContent());
+                    dto.setVideo_url(pub.getVideo_url());
+                    dto.setFilePath(pub.getFilePath());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return publications;
     }
 
     @Transactional
@@ -140,19 +154,27 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .orElseThrow(() -> new ResourceNotFoundExcept("Playlist no encontrada"));
         Publication publication = publicationRepository.findById(publicationId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Publicación no encontrada"));
-        publication.setPlaylist(playlist);
-        publication.setUpdatedAt(LocalDateTime.now());
-        return publicationRepository.save(publication);
+
+        if (!playlist.getPublications().contains(publication)) {
+            playlist.getPublications().add(publication);
+            publication.setPlaylist(playlist);
+        }
+
+        playlistRepository.save(playlist);
+        publicationRepository.save(publication);
+
+        return publication;
     }
 
     @Transactional
     @Override
     public void removePublicationFromPlaylist(Integer playlistId, Integer publicationId) {
-        playlistRepository.findById(playlistId)
+        Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Playlist no encontrada"));
         Publication publication = publicationRepository.findById(publicationId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Publicación no encontrada"));
-        publication.setPlaylist(null);
-        publicationRepository.save(publication);
+
+        playlist.getPublications().remove(publication);
+        playlistRepository.save(playlist);
     }
 }

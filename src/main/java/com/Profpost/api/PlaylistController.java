@@ -1,6 +1,6 @@
 package com.Profpost.api;
 
-import org.springframework.ui.Model;
+import com.Profpost.dto.PublicationInPlaylistDTO;
 import com.Profpost.dto.PlaylistDTO;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
@@ -48,9 +48,9 @@ public class PlaylistController {
     }
 
     @GetMapping("/{playlistId}/publications")
-    public ResponseEntity<List<Publication>> getPublicationByPlaylist(@PathVariable Integer playlistId) {
-        List<Publication> publication = playlistService.getPublicationByPlaylistId(playlistId);
-        return ResponseEntity.ok(publication);
+    public ResponseEntity<List<PublicationInPlaylistDTO>> getPublicationsForPlaylist(@PathVariable Integer playlistId) {
+        List<PublicationInPlaylistDTO> publications = playlistService.getPublicationsForPlaylist(playlistId);
+        return ResponseEntity.ok(publications);
     }
 
     @PostMapping("/add/publication")
@@ -60,18 +60,16 @@ public class PlaylistController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{playlistId}/publications/{publicationsId}")
-    public ResponseEntity<Void> removePublicationFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer publicationId) {
+    @DeleteMapping("/{playlistId}/publications/{publicationId}")
+    public void removePublicationFromPlaylist(
+            @PathVariable Integer playlistId,
+            @PathVariable Integer publicationId) {
         playlistService.removePublicationFromPlaylist(playlistId, publicationId);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/my-playlists")
     public ResponseEntity<List<PlaylistDTO>> getPlaylistsForUser() {
-        // Obtener las playlists asociadas al usuario autenticado
         List<PlaylistDTO> playlists = playlistService.findPlaylistsByUser();
-
-        // Retornar las playlists en formato JSON
         return ResponseEntity.ok(playlists);
     }
 }

@@ -50,7 +50,6 @@ public class DonationServiceImpl implements DonationService {
     public List<DonationDetailsDTO> getDonorsAndAmounts(Integer creatorId) {
         List<Donation> donations = donationRepository.findDonationsByUserId(creatorId);
 
-
         User user = userRepository.findById(creatorId)
                 .orElseThrow(() -> new ResourceNotFoundExcept("Creador no encontrado con id: " + creatorId));
 

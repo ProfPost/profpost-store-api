@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "accounts")
@@ -30,4 +32,7 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName ="id" )
     private Role role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Playlist> playlists;
 }

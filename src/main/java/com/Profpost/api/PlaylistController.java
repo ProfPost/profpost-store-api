@@ -1,5 +1,6 @@
 package com.Profpost.api;
 
+import org.springframework.ui.Model;
 import com.Profpost.dto.PlaylistDTO;
 import com.Profpost.model.entity.Publication;
 import com.Profpost.service.PlaylistService;
@@ -63,5 +64,14 @@ public class PlaylistController {
     public ResponseEntity<Void> removePublicationFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer publicationId) {
         playlistService.removePublicationFromPlaylist(playlistId, publicationId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/my-playlists")
+    public ResponseEntity<List<PlaylistDTO>> getPlaylistsForUser() {
+        // Obtener las playlists asociadas al usuario autenticado
+        List<PlaylistDTO> playlists = playlistService.findPlaylistsByUser();
+
+        // Retornar las playlists en formato JSON
+        return ResponseEntity.ok(playlists);
     }
 }

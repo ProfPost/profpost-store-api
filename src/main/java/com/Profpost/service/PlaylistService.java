@@ -19,4 +19,7 @@ public interface PlaylistService {
     Publication addPublicationToPlaylist(Integer playlistId, Integer publicationId);
 
     void removePublicationFromPlaylist(Integer playlistId, Integer publicationId);
+
+    // Nuevo método para obtener las playlists del usuario autenticado
+    List<PlaylistDTO> findPlaylistsByUser();
 }
